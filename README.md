@@ -8,9 +8,16 @@ If you like it and use the script, I'm happy if I can mention you/your company i
 In order to run the scripts, you need to download all the files in this repository. There are dependencies between the files so you cannot just download a single file. Please always use the full folder structure.
 
 ## Install Prerequisites
-Make sure you have python 3.x installed on your system and it's available via your PATH variable.
+## Install Prerequisites
+Make sure you have python 3.x installed on your system and it's available via your PATH variable. You can check this by running `python --version` on your terminal. If it works without error, you have python installed and ready. If not, you can download it from the [official Python Website](https://www.python.org/downloads/).
 
-Then run `python -m pip install -r .\requirements.txt` from this directory to install the packages.
+**Important:** It can be that you have to use `python3 --version`. If this is the case, please use always `python3` instead of `python` in the following commands.
+
+Once you have made sure python is installed, you can fetch the required python packages:
+Run `python -m pip install -r .\requirements.txt` from the directory that contains the scripts.
+
+**Important:** If you are on Linux or MacOS, the paths work differently. Use "/" instead of "\" for all the commands that follow. So the above command would look like this for MacOS/Linux:
+`python -m pip install -r ./requirements.txt`
 
 ## Create Flow Metrics Visulization
 To create the visulizations with this script, you need various inputs. First and foremost, you need to provide a csv file that includes the date when an item was started and closed (unless it's still in progress). The csv can contain other information, but it's not needed nor relevant for any of the visulizations. Using the "history" parameter, you can define which perioud you want to visualize. Do you want to see the last 30 days or rather the last 90 days?
