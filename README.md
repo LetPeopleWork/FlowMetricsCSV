@@ -40,6 +40,7 @@ parser.add_argument("--StartedDateColumn", default="Activated Date")
 parser.add_argument("--ClosedDateColumn", default="Closed Date")
 parser.add_argument("--DateFormat", default="%m/%d/%Y %I:%M:%S %p")
 parser.add_argument("--History", default="90")
+parser.add_argument("--ShowPlots", default=False, action=argparse.BooleanOptionalAction)
 ```
 
 You can overwrite them either by changing the python file or by supplying specific options via command line: `python .\FlowMetrics.py --History 30`
@@ -54,6 +55,7 @@ Name | Description |
 --ClosedDateColumn | The name of the column in the csv file that contains the closed date. Default is "Closed Date". |
 --DateFormat | The format of the dates in the csv file. Default is "%m/%d/%Y %I:%M:%S %p". Check [Python Dates](https://www.w3schools.com/python/python_datetime.asp) for the options you have (or ask ChatGPT) |
 --History | The number of days of history to be used for the simulation. Default is "90". |
+--ShowPlots | Supply this parameter to get an interactive view of the charts while they are being created |
 
 # Charts
 TO DO

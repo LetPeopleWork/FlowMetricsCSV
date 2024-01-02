@@ -12,7 +12,7 @@ import os
 
 class FlowMetricsService:    
        
-    def plot_cycle_time_scatterplot(self, items, history, plot=True):
+    def plot_cycle_time_scatterplot(self, items, history, show_plot=True):
         cycle_times = [item.cycle_time for item in items if item.cycle_time is not None]
 
         if not cycle_times:
@@ -31,7 +31,7 @@ class FlowMetricsService:
             print("No closed work items within the specified history for plotting.")
             return
 
-        plt.figure(figsize=(10, 6))
+        plt.figure(figsize=(15, 9))
         plt.scatter(dates, cycle_times)
         plt.title("Cycle Time Scatterplot")
         plt.xlabel("Work Item Closed Date")
@@ -58,10 +58,10 @@ class FlowMetricsService:
 
         plt.savefig(os.path.join(charts_folder, 'CycleTime.png'))
 
-        if plot:
+        if show_plot:
             plt.show()
 
-    def plot_work_item_age_scatterplot(self, items, history, plot=True):
+    def plot_work_item_age_scatterplot(self, items, history, show_plot=True):
         work_item_ages = [item.work_item_age for item in items if item.work_item_age is not None]
 
         if not work_item_ages:
@@ -69,12 +69,12 @@ class FlowMetricsService:
             return
 
         # Set default size to be wider (10 inches width and 6 inches height in this example)
-        plt.figure(figsize=(10, 6))
+        plt.figure(figsize=(15, 9))
 
         dates = [item.started_date.date() for item in items if item.work_item_age is not None]
 
         # Plot Work Item Age as triangles
-        plt.scatter(dates, work_item_ages, marker='^', color='orange', label='Work Item Age (days)', alpha=0.7)
+        plt.scatter(dates, work_item_ages, label='Work Item Age (days)', alpha=0.7)
 
         plt.title("Work Item Age Scatterplot with Cycle Time Percentiles")
         plt.xlabel("Work Item Started Date")
@@ -111,10 +111,10 @@ class FlowMetricsService:
 
         plt.savefig(os.path.join(charts_folder, 'WorkItemAgeWithCycleTimePercentiles.png'))
         
-        if plot:
+        if show_plot:
             plt.show()
 
-    def plot_throughput_run_chart(self, items, history, plot=True):
+    def plot_throughput_run_chart(self, items, history, show_plot=True):
         closed_dates = [item.closed_date.date() for item in items if item.closed_date is not None]
 
         if not closed_dates:
@@ -122,7 +122,7 @@ class FlowMetricsService:
             return
 
         # Set default size to be wider (10 inches width and 6 inches height in this example)
-        plt.figure(figsize=(10, 6))
+        plt.figure(figsize=(15, 9))
 
         if history is not None:
             # Filter items based on the history parameter
@@ -151,10 +151,10 @@ class FlowMetricsService:
 
         plt.savefig(os.path.join(charts_folder, 'ThroughputRunChart.png'))
         
-        if plot:
+        if show_plot:
             plt.show()
 
-    def plot_work_in_process_run_chart(self, items, history, plot=True):
+    def plot_work_in_process_run_chart(self, items, history, show_plot=True):
         if not items:
             print("No work items for plotting work in process.")
             return
@@ -166,7 +166,7 @@ class FlowMetricsService:
             items = [item for item in items if start_date <= item.started_date <= end_date]
 
         # Set default size to be wider (10 inches width and 6 inches height in this example)
-        plt.figure(figsize=(10, 6))
+        plt.figure(figsize=(15, 9))
 
         # Create a range of dates representing the specified history
         history_dates = pd.date_range(end_date - timedelta(days=history-1), end_date)
@@ -201,5 +201,5 @@ class FlowMetricsService:
 
         plt.savefig(os.path.join(charts_folder, 'WorkInProgressRunChart.png'))
 
-        if plot:
+        if show_plot:
             plt.show()
