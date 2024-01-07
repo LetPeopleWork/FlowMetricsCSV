@@ -9,7 +9,7 @@ parser.add_argument("--Delimeter", default=";")
 parser.add_argument("--StartedDateColumn", default="Activated Date")
 parser.add_argument("--ClosedDateColumn", default="Closed Date")
 parser.add_argument("--DateFormat", default="%m/%d/%Y %I:%M:%S %p")
-parser.add_argument("--History", default="30")
+parser.add_argument("--History", default="90")
 parser.add_argument("--ShowPlots", default=False, action=argparse.BooleanOptionalAction)
 
 args = parser.parse_args()
