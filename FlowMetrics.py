@@ -4,7 +4,7 @@ from CsvService import CsvService
 from FlowMetricsService import FlowMetricsService
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--FileName", default=".\\ExampleFile.csv")
+parser.add_argument("--FileName", default="ExampleFile.csv")
 parser.add_argument("--Delimeter", default=";")
 parser.add_argument("--StartedDateColumn", default="Activated Date")
 parser.add_argument("--ClosedDateColumn", default="Closed Date")

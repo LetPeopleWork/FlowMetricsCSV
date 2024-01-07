@@ -34,7 +34,7 @@ It should do two things:
 In `FlowMetrics.py` the following default values are defined:
 
 ```
-parser.add_argument("--FileName", default=".\\ExampleFile.csv")
+parser.add_argument("--FileName", default="ExampleFile.csv")
 parser.add_argument("--Delimeter", default=";")
 parser.add_argument("--StartedDateColumn", default="Activated Date")
 parser.add_argument("--ClosedDateColumn", default="Closed Date")
@@ -49,7 +49,7 @@ I would recommend to change the values that don't change often (for example the 
 ### Arguments
 Name | Description |
 --- | --- |
---FileName | The name of the csv file to be used for the simulation. Default is ".\\ExampleFile.csv". Can be a relative path (using '.') or an absolute one |
+--FileName | The name of the csv file to be used for the simulation. Default is "ExampleFile.csv". Can be a relative path (using '.') or an absolute one |
 --Delimeter | The delimeter which is used in the specified csv file. Default is ; |
 --StartedDateColumn | The name of the column in the csv file that contains the started date. Default is "Activated Date". |
 --ClosedDateColumn | The name of the column in the csv file that contains the closed date. Default is "Closed Date". |
