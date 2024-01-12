@@ -6,7 +6,7 @@ import csv
 class CsvService:    
        
     def parse_items(self, file_path, delimeter, started_date_column_name, closed_date_column_name, start_date_format, closed_date_format):
-        print("Loading Items from CSV File: '{0}'. Started Date Column Name '{1}', Closed Date Column Name '{2}, Start Date Format '{3}', and Closed Date Format {4}".format(file_path, closed_date_column_name, started_date_column_name, start_date_format, closed_date_format))
+        print("Loading Items from CSV File: '{0}'. Started Date Column Name '{1}', Closed Date Column Name '{2}', Start Date Format '{3}', and Closed Date Format '{4}'".format(file_path, started_date_column_name, closed_date_column_name, start_date_format, closed_date_format))
         work_items = []
         
         with open(file_path, 'r') as file:

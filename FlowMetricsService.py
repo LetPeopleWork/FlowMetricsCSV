@@ -23,7 +23,7 @@ class FlowMetricsService:
             # Filter items based on the history parameter
             end_date = datetime.today()
             start_date = end_date - timedelta(days=history)
-            items = [item for item in items if item.closed_date and start_date <= item.closed_date <= end_date]
+            items = [item for item in items if item.closed_date and item.started_date and start_date <= item.closed_date <= end_date]
             cycle_times = [item.cycle_time for item in items if item.cycle_time is not None]
             dates = [item.closed_date.date() for item in items]
 
@@ -163,7 +163,7 @@ class FlowMetricsService:
             # Filter items based on the history parameter
             end_date = datetime.today()
             start_date = end_date - timedelta(days=history)
-            items = [item for item in items if start_date <= item.started_date <= end_date]
+            items = [item for item in items if item.started_date is not None and start_date <= item.started_date <= end_date]
 
         # Set default size to be wider (10 inches width and 6 inches height in this example)
         plt.figure(figsize=(15, 9))
