@@ -38,7 +38,8 @@ parser.add_argument("--FileName", default="ExampleFile.csv")
 parser.add_argument("--Delimeter", default=";")
 parser.add_argument("--StartedDateColumn", default="Activated Date")
 parser.add_argument("--ClosedDateColumn", default="Closed Date")
-parser.add_argument("--DateFormat", default="%m/%d/%Y %I:%M:%S %p")
+parser.add_argument("--StartDateFormat", default="%m/%d/%Y %I:%M:%S %p")
+parser.add_argument("--ClosedDateFormat", default=None)
 parser.add_argument("--History", default="90")
 parser.add_argument("--ShowPlots", default=False, action=argparse.BooleanOptionalAction)
 ```
@@ -53,7 +54,8 @@ Name | Description |
 --Delimeter | The delimeter which is used in the specified csv file. Default is ; |
 --StartedDateColumn | The name of the column in the csv file that contains the started date. Default is "Activated Date". |
 --ClosedDateColumn | The name of the column in the csv file that contains the closed date. Default is "Closed Date". |
---DateFormat | The format of the dates in the csv file. Default is "%m/%d/%Y %I:%M:%S %p". Check [Python Dates](https://www.w3schools.com/python/python_datetime.asp) for the options you have (or ask ChatGPT) |
+--StartDateFormat | The format of the start dates in the csv file. Default is "%m/%d/%Y %I:%M:%S %p". Check [Python Dates](https://www.w3schools.com/python/python_datetime.asp) for the options you have (or ask ChatGPT) |
+--ClosedDateFormat | The format of the closed dates in the csv file. Default is None and it will use whatever is supplied as StartDateFormat. This can be used if the closed date has a different format than the start date. Check [Python Dates](https://www.w3schools.com/python/python_datetime.asp) for the options you have (or ask ChatGPT) |
 --History | The number of days of history to be used for the simulation. Default is "90". |
 --ShowPlots | Supply this parameter to get an interactive view of the charts while they are being created |
 
