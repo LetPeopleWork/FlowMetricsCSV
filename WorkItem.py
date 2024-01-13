@@ -13,10 +13,11 @@ class WorkItem:
         
         if started_date:
             self.started_date = started_date
-            self.work_item_age = (datetime.today() - started_date).days + 1
         
         if started_date and closed_date:
             self.cycle_time = (closed_date - started_date).days + 1
+        elif started_date and not closed_date:
+            self.work_item_age = (datetime.today() - started_date).days + 1
             
     def to_dict(self):
             return {
