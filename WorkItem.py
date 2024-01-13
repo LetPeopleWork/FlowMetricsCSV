@@ -18,7 +18,6 @@ class WorkItem:
         if started_date and closed_date:
             self.cycle_time = (closed_date - started_date).days + 1
             
-            
     def to_dict(self):
             return {
                 'started_date': self.started_date.date(),

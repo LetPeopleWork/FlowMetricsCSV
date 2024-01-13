@@ -3,58 +3,87 @@ import argparse
 from CsvService import CsvService
 from FlowMetricsService import FlowMetricsService
 
+import json
+
 parser = argparse.ArgumentParser()
-parser.add_argument("--FileName", default="ExampleFile.csv")
-parser.add_argument("--Delimeter", default=";")
-parser.add_argument("--StartedDateColumn", default="Activated Date")
-parser.add_argument("--ClosedDateColumn", default="Closed Date")
-parser.add_argument("--StartDateFormat", default="%m/%d/%Y %I:%M:%S %p")
-parser.add_argument("--ClosedDateFormat", default=None)
-parser.add_argument("--History", default="90")
-parser.add_argument("--ShowPlots", default=False, action=argparse.BooleanOptionalAction)
+parser.add_argument("--ConfigFileNames", type=str, nargs='+', default=["config.json"])
 
 args = parser.parse_args()
 
-file_name = args.FileName
-deliemter = args.Delimeter
-started_date_column = args.StartedDateColumn
-closed_date_column = args.ClosedDateColumn
-start_date_format = args.StartDateFormat
-closed_date_format = args.ClosedDateFormat
-history = int(args.History)
-show_plots = args.ShowPlots
+def read_config(file_path):
+    print("Reading Config File from {0}".format(file_path))
+    with open(file_path, 'r') as file:
+        config_data = json.load(file)
+    return config_data
 
-if not closed_date_format:
-    closed_date_format = start_date_format
+config_paths = args.ConfigFileNames
+print("Using following configuration files: {0}".format(config_paths))
 
-csv_service = CsvService()
-flow_metrics_service = FlowMetricsService()
+for config_path in config_paths:
+    print("================================================================")
+    config = read_config(config_path)
 
-def get_items():    
-    work_items = csv_service.parse_items(file_name, deliemter, started_date_column, closed_date_column, start_date_format, closed_date_format)
-    return work_items
+    file_name = config["general"]["fileName"]
+    deliemter = config["general"]["delimeter"]
+    started_date_column = config["general"]["startedDateColumn"]
+    closed_date_column = config["general"]["closedDateColumn"]
+    start_date_format = config["general"]["startDateFormat"]
+    closed_date_format = config["general"]["closedDateFormat"]
+    show_plots = config["general"]["showPlots"]
+    charts_folder = config["general"]["chartsFolder"]
 
-print("================================================================")
-print("Calculating Flow Metrics...")
-print("================================================================")  
-print("Parameters:")
-print("FileName: {0}".format(file_name))
-print("Delimeter: {0}".format(deliemter))
-print("Start Date Column: {0}".format(started_date_column))
-print("Closed Date Column: {0}".format(closed_date_column))
-print("Start Date Format: {0}".format(start_date_format))
-print("Closed Date Format: {0}".format(closed_date_format))
-print("History: {0}".format(history))
-print("Show Plots: {0}".format(show_plots))
-print("----------------------------------------------------------------")   
+    if not closed_date_format:
+        closed_date_format = start_date_format
+
+    csv_service = CsvService()
+    flow_metrics_service = FlowMetricsService(show_plots, charts_folder)
+
+    def get_items():    
+        work_items = csv_service.parse_items(file_name, deliemter, started_date_column, closed_date_column, start_date_format, closed_date_format)
+        return work_items
+
+    
+    print("Creating Charts as per the configuration...")
+    print("----------------------------------------------------------------")   
 
 
-work_items = get_items()        
-if len(work_items) < 1:
-    print("No items - skipping")
-    exit()
+    work_items = get_items()        
+    if len(work_items) < 1:
+        print("No items - skipping")
+        exit()
 
-flow_metrics_service.plot_cycle_time_scatterplot(work_items, history, show_plots)
-flow_metrics_service.plot_work_item_age_scatterplot(work_items, history, show_plots)
-flow_metrics_service.plot_throughput_run_chart(work_items, history, show_plots)
-flow_metrics_service.plot_work_in_process_run_chart(work_items, history, show_plots)
+    def create_cycle_time_scatterplot():
+        chart_config = config["cycleTimeScatterPlot"]
+
+        if chart_config["generate"]:
+            flow_metrics_service.plot_cycle_time_scatterplot(work_items, chart_config["history"], chart_config["percentiles"], chart_config["percentileColors"], chart_config["chartName"])
+
+    def create_work_item_age_scatterplot():
+        chart_config = config["workItemAgeScatterPlot"]
+
+        if chart_config["generate"]:
+            flow_metrics_service.plot_work_item_age_scatterplot(work_items, chart_config["history"], chart_config["xAxisLines"], chart_config["xAxisLineColors"], chart_config["chartName"])
+
+    def create_throughput_run_chart():
+        chart_config = config["throughputRunChart"]
+
+        if chart_config["generate"]:
+            flow_metrics_service.plot_throughput_run_chart(work_items, chart_config["history"], chart_config["chartName"], chart_config["unit"])
+
+    def create_work_in_process_run_chart():
+        chart_config = config["workInProcessRunChart"]
+
+        if chart_config["generate"]:
+            flow_metrics_service.plot_work_in_process_run_chart(work_items, chart_config["history"], chart_config["chartName"])
+
+    def create_work_started_vs_finished_chart():
+        chart_config = config["startedVsFinishedChart"]
+
+        if chart_config["generate"]:
+            flow_metrics_service.plot_work_started_vs_finished_chart(work_items, chart_config["history"], chart_config["startedColor"], chart_config["closedColor"], chart_config["chartName"])
+
+    create_cycle_time_scatterplot()
+    create_work_item_age_scatterplot()
+    create_throughput_run_chart()
+    create_work_in_process_run_chart()
+    create_work_started_vs_finished_chart()
