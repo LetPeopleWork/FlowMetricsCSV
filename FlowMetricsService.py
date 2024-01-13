@@ -1,7 +1,9 @@
 from WorkItem import WorkItem
 
 from datetime import datetime, timedelta
+
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 
 import numpy as np
 import pandas as pd
@@ -47,13 +49,13 @@ class FlowMetricsService:
         plt.xlabel("Work Item Closed Date")
         plt.ylabel("Cycle Time (days)")
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
-        
+        plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
         # Calculate percentiles
         percentile_values = np.percentile(cycle_times, percentiles)
 
         # Plot percentile lines
         for value, label, color in zip(percentile_values, percentiles, percentile_colors):
-            plt.axhline(y=value, color=color, linestyle='--', label=f'{label}th Percentile')
+            plt.axhline(y=value, color=color, linestyle='--', label=f'{label}th Percentile ({int(value)} Days)')
 
         plt.legend()
 
@@ -118,8 +120,10 @@ class FlowMetricsService:
         valid_units = ['days', 'weeks', 'months']
         if x_axis_unit not in valid_units:
             raise ValueError(f"The 'x_axis_unit' parameter should be one of {valid_units}.")
-
-        closed_dates = [item.closed_date.date() for item in items if item.closed_date is not None]
+        
+        # Filter items based on the history parameter
+        start_date = datetime.today() - timedelta(days=history)
+        closed_dates = [item.closed_date.date() for item in items if item.closed_date and start_date <= item.closed_date]
 
         if not closed_dates:
             print("No closed work items for plotting throughput.")
@@ -127,12 +131,6 @@ class FlowMetricsService:
 
         # Set default size to be wider (10 inches width and 6 inches height in this example)
         plt.figure(figsize=(15, 9))
-
-        if history is not None:
-            # Filter items based on the history parameter
-            end_date = datetime.today()
-            start_date = end_date - timedelta(days=history)
-            items = [item for item in items if item.closed_date and start_date <= item.closed_date <= end_date]
 
         throughput_counts = Counter()
 
@@ -160,7 +158,7 @@ class FlowMetricsService:
         plt.xlabel(f"Work Item Closed Date ({x_axis_unit.capitalize()})")
         plt.ylabel("Number of Items Completed")
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
-
+        plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
         plt.legend(loc='upper left')
 
         chart_file_path = os.path.join(self.charts_folder, chart_name)
@@ -207,7 +205,7 @@ class FlowMetricsService:
         plt.xlabel("Date")
         plt.ylabel("Number of Items In Process")
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
-
+        plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
         plt.legend(loc='upper left')
 
         chart_file_path = os.path.join(self.charts_folder, chart_name)
