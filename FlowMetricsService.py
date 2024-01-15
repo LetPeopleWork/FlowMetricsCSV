@@ -134,13 +134,13 @@ class FlowMetricsService:
 
         throughput_counts = Counter()
 
-        for item in items:
+        for item in closed_dates:
             if x_axis_unit == 'days':
-                key = item.closed_date.date()
+                key = item
             elif x_axis_unit == 'weeks':
-                key = item.closed_date.date().isocalendar()[1]
+                key = item.isocalendar()[1]
             elif x_axis_unit == 'months':
-                key = item.closed_date.date().month
+                key = item.month
 
             throughput_counts[key] += 1
 
