@@ -231,37 +231,37 @@ class FlowMetricsService:
 
             if started_date_key:
                 started_counts[started_date_key] = started_counts.get(started_date_key, 0) + 1
+                
+                # Make sure we have the same keys in both dictionaries - keep the existing value
+                closed_counts[started_date_key] = closed_counts.get(started_date_key, 0) + 0
 
             if closed_date_key:
                 closed_counts[closed_date_key] = closed_counts.get(closed_date_key, 0) + 1
 
-        # Collect all unique date keys
-        all_date_keys = set(started_counts.keys()) | set(closed_counts.keys())
+                # Make sure we have the same keys in both dictionaries - keep the existing value
+                started_counts[closed_date_key] = started_counts.get(closed_date_key, 0) + 0
 
-        # Convert keys back to integers for plotting
-        sorted_date_keys_int = [datetime.strptime(key + '-1', "%Y-%W-%u").date() for key in all_date_keys]
+        # Sort dictionaries
+        key_function = lambda x: x[0]
 
-        # Sort the dates chronologically
-        sorted_date_keys_int.sort()
-
-        # Get counts for both started and closed, filling in zeros for missing dates
-        started_values = [started_counts.get(key, 0) for key in all_date_keys]
-        closed_values = [closed_counts.get(key, 0) for key in all_date_keys]
+        sorted_started_counts = dict(sorted(started_counts.items(), key=key_function))
+        sorted_closed_counts = dict(sorted(closed_counts.items(), key=key_function))
 
         # Calculate the center positions for the bars
-        center_positions = [x for x in range(len(sorted_date_keys_int))]
+        center_positions = [x for x in range(len(started_counts))]
 
         # Plot the bar chart with adjusted x-axis positions
         plt.figure(figsize=(15, 9))
         bar_width = 0.35
-        plt.bar(center_positions, started_values, width=bar_width, color=started_color, alpha=0.7, label='Started')
-        plt.bar([pos + bar_width for pos in center_positions], closed_values, width=bar_width, color=closed_color, alpha=0.7, label='Closed')
+        plt.bar(center_positions, sorted_started_counts.values(), width=bar_width, color=started_color, alpha=0.7, label='Started')
+        plt.bar([pos + bar_width for pos in center_positions], sorted_closed_counts.values(), width=bar_width, color=closed_color, alpha=0.7, label='Closed')
+
         plt.title("Work Started and Closed")
         plt.xlabel("Week of the Year")
         plt.ylabel("Number of Work Items")
 
         # Set x-axis labels based on the week of the year
-        plt.xticks([pos + bar_width / 2 for pos in center_positions], labels=[date.strftime("%Y-%W") for date in sorted_date_keys_int], rotation=45, ha='right')
+        plt.xticks([pos + bar_width / 2 for pos in center_positions], labels=sorted_started_counts.keys(), rotation=45, ha='right')
         
         plt.legend()
 
