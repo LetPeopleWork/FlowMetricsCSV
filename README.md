@@ -90,10 +90,11 @@ In the [config.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/c
 | ClosedDateColumn       | The name of the column in the csv file that contains the closed date          | Closed Date        |
 | StartDateFormat        | The format of the start dates in the csv file. Default is "%m/%d/%Y %I:%M:%S %p". Check [Python Dates](https://www.w3schools.com/python/python_datetime.asp) for the options you have (or ask ChatGPT)       | %m/%d/%Y %I:%M:%S %p|
 | ClosedDateFormat       | The format of the closed dates in the csv file. If not set (default), the same format as specified for the start date is used. Check [Python Dates](https://www.w3schools.com/python/python_datetime.asp) for the options you have (or ask ChatGPT)          | None |
+| estimationColumn       | The name of the column in the csv file that contains the estimations (optional). This is needed if you want to plot a chart where you compare estimates vs. cycle-time          | empty        |
 | ChartsFolder           | Folder path for the folder where the charts should be saved. Can be relative to the script location (like the default) or a full path to a folder. Folder does not need to exist, it will be created as part of the script.               | Charts             |
 | ShowPlots              | If set to true, the script will stop and show you an interactive version of the chart before continuing.                | false              |
 
-### CycleTimeScatterPlot
+### Cycle Time Scatter Plot
 
 | Name                   | Description                          | Default Value      |
 |------------------------|--------------------------------------|--------------------|
@@ -103,7 +104,7 @@ In the [config.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/c
 | Percentiles            | List of which percentiles should be shown in the chart. Can be any value from 1 to 100.     | [50, 70, 85, 95]    |
 | PercentileColors       | Colors for the percentiles defined. The amount has to match with what you specified above. Colors are associated by sequence. | [red, orange, lightgreen, darkgreen]|
 
-### WorkItemAgeScatterPlot
+### Work Item Age Scatter Plot
 
 | Name                   | Description                          | Default Value      |
 |------------------------|--------------------------------------|--------------------|
@@ -113,7 +114,7 @@ In the [config.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/c
 | XAxisLines             | List of which lines should be shown on the x-axis (in days). This can be useful to track if your items approach their [Service Level Expectation](https://kanbanguides.org/english/).      | [5, 10]            |
 | XAxisLineColors        | Colors for corresponding X-axis lines. The amount has to match with what you specified above. Colors are associated by sequence. | [orange, red]      |
 
-### ThroughputRunChart
+### Throughput Run Chart
 
 | Name                   | Description                          | Default Value      |
 |------------------------|--------------------------------------|--------------------|
@@ -122,7 +123,7 @@ In the [config.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/c
 | Unit                   | Which grouping is applied. Possible options are 'days', 'weeks', and 'months'    | days               |
 | ChartName              | File name of the chart.               | Throughput.png     |
 
-### WorkInProcessRunChart
+### Work In Process Run Chart
 
 | Name                   | Description                          | Default Value      |
 |------------------------|--------------------------------------|--------------------|
@@ -130,7 +131,7 @@ In the [config.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/c
 | History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days.      | 30                 |
 | ChartName              | File name of the chart.                 | WorkInProcess.png  |
 
-### StartedVsFinishedChart
+### Started Vs FinishedChart
 
 | Name                   | Description                          | Default Value      |
 |------------------------|--------------------------------------|--------------------|
@@ -139,6 +140,15 @@ In the [config.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/c
 | ChartName              | File name of the chart.          | StartedVsFinished.png|
 | StartedColor           | Color for started items on the chart  | orange             |
 | ClosedColor            | Color for closed items on the chart   | green              |
+
+
+### Estimation Vs CycleTime
+
+| Name                   | Description                          | Default Value      |
+|------------------------|--------------------------------------|--------------------|
+| Generate               | Whether to generate the chart at all. If set to false, no further settings need to be specified.         | false               |
+| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days.      | 90                 |
+| ChartName              | File name of the chart.          | EstimationVsCycleTime.png|
 
 ## Running the Script with different/multiple Configurations
 If not specified otherwise, the _config.json_ will be used. However, you can also override which config file should be used by specifying it as part of the command line when running the script:
