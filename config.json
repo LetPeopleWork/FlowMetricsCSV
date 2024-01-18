@@ -6,6 +6,7 @@
         "closedDateColumn": "Closed Date",
         "startDateFormat": "%m/%d/%Y %I:%M:%S %p",
         "closedDateFormat": "",
+        "estimationColumn": "",
         "chartsFolder": "Charts",
         "showPlots": false
     },
@@ -40,5 +41,10 @@
         "chartName": "StartedVsFinished.png",
         "startedColor": "orange",
         "closedColor": "green"
+    },
+    "estimationVsCycleTime": {
+        "generate": false,
+        "history": 90,
+        "chartName": "EstimationVsCycleTime.png"
     }
 }

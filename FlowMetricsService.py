@@ -271,3 +271,39 @@ class FlowMetricsService:
 
         if self.show_plots:
             plt.show()
+
+    def plot_estimation_vs_cycle_time_scatterplot(self, items, history, chart_name):
+        print("Creating Estimation vs. Cycle Time Scatterplot with the following config: History: {0}, Chart Name: {1}".format(history, chart_name))
+
+        cycle_times = [item.cycle_time for item in items if item.cycle_time is not None]
+
+        if not cycle_times:
+            print("No closed work items for plotting.")
+            return
+
+        if history is not None:
+            # Filter items based on the history parameter
+            end_date = datetime.today()
+            start_date = end_date - timedelta(days=history)
+            items = [item for item in items if item.closed_date and item.started_date and start_date <= item.closed_date <= end_date]
+            cycle_times = [item.cycle_time for item in items if item.cycle_time is not None]
+            estimations = [item.estimation for item in items if item.estimation is not None]
+
+        if not cycle_times:
+            print("No closed work items within the specified history for plotting.")
+            return
+
+
+        plt.figure(figsize=(15, 9))
+        plt.scatter(estimations, cycle_times)
+        plt.title("Estimation vs. Cycle Time")
+        plt.xlabel("Estimation")
+        plt.ylabel("Cycle Time (days)")
+        plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+
+        chart_file_path = os.path.join(self.charts_folder, chart_name)
+        print("Storing file at {0}".format(chart_file_path))
+        plt.savefig(chart_file_path)
+
+        if self.show_plots:
+            plt.show()

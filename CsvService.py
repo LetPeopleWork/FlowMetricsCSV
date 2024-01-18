@@ -5,7 +5,7 @@ import csv
 
 class CsvService:    
        
-    def parse_items(self, file_path, delimeter, started_date_column_name, closed_date_column_name, start_date_format, closed_date_format):
+    def parse_items(self, file_path, delimeter, started_date_column_name, closed_date_column_name, start_date_format, closed_date_format, estimation_column_name):
         print("Loading Items from CSV File: '{0}'. Started Date Column Name '{1}', Closed Date Column Name '{2}', Start Date Format '{3}', and Closed Date Format '{4}'".format(file_path, started_date_column_name, closed_date_column_name, start_date_format, closed_date_format))
         work_items = []
         
@@ -20,8 +20,12 @@ class CsvService:
                 started_date = row[started_date_column_name]
                 if started_date:    
                     started_date = datetime.strptime(started_date, start_date_format)        
+
+                estimation = None
+                if estimation_column_name in row:
+                    estimation = int(row[estimation_column_name])
                        
-                work_items.append(WorkItem(started_date, closed_date))
+                work_items.append(WorkItem(started_date, closed_date, estimation))
         
         print("Found {0} Items in the CSV".format(len(work_items)))
 

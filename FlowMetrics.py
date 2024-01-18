@@ -29,6 +29,7 @@ for config_path in config_paths:
     closed_date_column = config["general"]["closedDateColumn"]
     start_date_format = config["general"]["startDateFormat"]
     closed_date_format = config["general"]["closedDateFormat"]
+    estimation_column = config["general"]["estimationColumn"]
     show_plots = config["general"]["showPlots"]
     charts_folder = config["general"]["chartsFolder"]
 
@@ -39,7 +40,7 @@ for config_path in config_paths:
     flow_metrics_service = FlowMetricsService(show_plots, charts_folder)
 
     def get_items():    
-        work_items = csv_service.parse_items(file_name, deliemter, started_date_column, closed_date_column, start_date_format, closed_date_format)
+        work_items = csv_service.parse_items(file_name, deliemter, started_date_column, closed_date_column, start_date_format, closed_date_format, estimation_column)
         return work_items
 
     
@@ -82,8 +83,15 @@ for config_path in config_paths:
         if chart_config["generate"]:
             flow_metrics_service.plot_work_started_vs_finished_chart(work_items, chart_config["history"], chart_config["startedColor"], chart_config["closedColor"], chart_config["chartName"])
 
+    def create_estimation_vs_cycle_time_chart():
+        chart_config = config["estimationVsCycleTime"]
+
+        if chart_config["generate"]:
+            flow_metrics_service.plot_estimation_vs_cycle_time_scatterplot(work_items, chart_config["history"], chart_config["chartName"])
+
     create_cycle_time_scatterplot()
     create_work_item_age_scatterplot()
     create_throughput_run_chart()
     create_work_in_process_run_chart()
     create_work_started_vs_finished_chart()
+    create_estimation_vs_cycle_time_chart()
