@@ -87,7 +87,7 @@ for config_path in config_paths:
         chart_config = config["estimationVsCycleTime"]
 
         if chart_config["generate"]:
-            flow_metrics_service.plot_estimation_vs_cycle_time_scatterplot(work_items, chart_config["history"], chart_config["chartName"])
+            flow_metrics_service.plot_estimation_vs_cycle_time_scatterplot(work_items, chart_config["history"], chart_config["chartName"], chart_config["estimationUnit"])
 
     create_cycle_time_scatterplot()
     create_work_item_age_scatterplot()
