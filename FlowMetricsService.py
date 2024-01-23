@@ -18,6 +18,8 @@ class FlowMetricsService:
         self.show_plots = show_plots
         self.charts_folder = charts_folder
 
+        self.current_date = datetime.now().strftime('%d.%m.%Y')
+
         if not os.path.exists(charts_folder):
             os.makedirs(charts_folder)
 
@@ -50,6 +52,10 @@ class FlowMetricsService:
         plt.ylabel("Cycle Time (days)")
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
         plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+
+        # Print Current Date
+        plt.text(1, 1.02, f"Generated on {self.current_date}", transform=plt.gca().transAxes, fontsize=10, ha='right', va='top')
+
         # Calculate percentiles
         percentile_values = np.percentile(cycle_times, percentiles)
 
@@ -86,6 +92,9 @@ class FlowMetricsService:
         plt.xlabel("Work Item Started Date")
         plt.ylabel("Time (days)")
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
+
+        # Print Current Date
+        plt.text(1, 1.02, f"Generated on {self.current_date}", transform=plt.gca().transAxes, fontsize=10, ha='right', va='top')
 
         if history is not None:
             # Filter items based on the history parameter for calculating Cycle Time percentiles
@@ -161,6 +170,9 @@ class FlowMetricsService:
         plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
         plt.legend(loc='upper left')
 
+        # Print Current Date
+        plt.text(1, 1.02, f"Generated on {self.current_date}", transform=plt.gca().transAxes, fontsize=10, ha='right', va='top')
+
         chart_file_path = os.path.join(self.charts_folder, chart_name)
         print("Storing file at {0}".format(chart_file_path))
         plt.savefig(chart_file_path)
@@ -207,6 +219,9 @@ class FlowMetricsService:
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
         plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
         plt.legend(loc='upper left')
+
+        # Print Current Date
+        plt.text(1, 1.02, f"Generated on {self.current_date}", transform=plt.gca().transAxes, fontsize=10, ha='right', va='top')
 
         chart_file_path = os.path.join(self.charts_folder, chart_name)
         print("Storing file at {0}".format(chart_file_path))
@@ -260,6 +275,9 @@ class FlowMetricsService:
         plt.xlabel("Week of the Year")
         plt.ylabel("Number of Work Items")
 
+        # Print Current Date
+        plt.text(1, 1.02, f"Generated on {self.current_date}", transform=plt.gca().transAxes, fontsize=10, ha='right', va='top')
+
         # Set x-axis labels based on the week of the year
         plt.xticks([pos + bar_width / 2 for pos in center_positions], labels=sorted_started_counts.keys(), rotation=45, ha='right')
         
@@ -300,6 +318,9 @@ class FlowMetricsService:
         plt.xlabel("Estimation ({0})".format(estimation_unit))
         plt.ylabel("Cycle Time (days)")
         plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+
+        # Print Current Date
+        plt.text(1, 1.02, f"Generated on {self.current_date}", transform=plt.gca().transAxes, fontsize=10, ha='right', va='top')
 
         chart_file_path = os.path.join(self.charts_folder, chart_name)
         print("Storing file at {0}".format(chart_file_path))
