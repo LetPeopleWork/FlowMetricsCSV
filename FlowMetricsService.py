@@ -47,6 +47,10 @@ class FlowMetricsService:
 
         plt.figure(figsize=(15, 9))
         plt.scatter(dates, cycle_times)
+        
+        for item in items:
+            plt.annotate(item.item_title, (item.closed_date.date(), item.cycle_time), textcoords="offset points", xytext=(0,10), ha='center')
+        
         plt.title("Cycle Time Scatterplot")
         plt.xlabel("Work Item Closed Date")
         plt.ylabel("Cycle Time (days)")

@@ -1,9 +1,10 @@
 from datetime import datetime
 
 class WorkItem:
-    def __init__(self, started_date, closed_date, estimation):
+    def __init__(self, started_date, closed_date, item_title, estimation):
         self.started_date = None
         self.closed_date = None
+        self.item_title = item_title
         self.estimation = estimation
 
         self.work_item_age = None

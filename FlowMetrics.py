@@ -30,6 +30,7 @@ for config_path in config_paths:
     start_date_format = config["general"]["startDateFormat"]
     closed_date_format = config["general"]["closedDateFormat"]
     estimation_column = config["general"]["estimationColumn"]
+    item_title_column = config["general"]["itemTitleColumn"]
     show_plots = config["general"]["showPlots"]
     charts_folder = config["general"]["chartsFolder"]
 
@@ -40,7 +41,7 @@ for config_path in config_paths:
     flow_metrics_service = FlowMetricsService(show_plots, charts_folder)
 
     def get_items():    
-        work_items = csv_service.parse_items(file_name, deliemter, started_date_column, closed_date_column, start_date_format, closed_date_format, estimation_column)
+        work_items = csv_service.parse_items(file_name, deliemter, started_date_column, closed_date_column, start_date_format, closed_date_format, estimation_column, item_title_column)
         return work_items
 
     
