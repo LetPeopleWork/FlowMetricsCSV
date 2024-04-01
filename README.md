@@ -42,6 +42,7 @@ In the [config.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/c
         "startDateFormat": "%m/%d/%Y %I:%M:%S %p",
         "closedDateFormat": "",
         "estimationColumn": "Story Points",
+        "itemTitleColumn": "ID",
         "chartsFolder": "Charts",
         "showPlots": false
     },
@@ -98,6 +99,7 @@ In the [config.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/c
 | StartDateFormat        | The format of the start dates in the csv file. Default is "%m/%d/%Y %I:%M:%S %p". Check [Python Dates](https://www.w3schools.com/python/python_datetime.asp) for the options you have (or ask ChatGPT)       | %m/%d/%Y %I:%M:%S %p|
 | ClosedDateFormat       | The format of the closed dates in the csv file. If not set (default), the same format as specified for the start date is used. Check [Python Dates](https://www.w3schools.com/python/python_datetime.asp) for the options you have (or ask ChatGPT)          | None |
 | estimationColumn       | The name of the column in the csv file that contains the estimations (optional). This is needed if you want to plot a chart where you compare estimates vs. cycle-time.          | Story Points        |
+| itemTitleColumn       | The name of the column in the csv file that contains the title of the items (optional). This can be anything to identify the item, like an ID or some other text. If set, it will display the text next to the bubbles in the charts. Note that the shorter the text, the easier it is to read. Long texts will overlap.          | ID        |
 | ChartsFolder           | Folder path for the folder where the charts should be saved. Can be relative to the script location (like the default) or a full path to a folder. Folder does not need to exist, it will be created as part of the script.               | Charts             |
 | ShowPlots              | If set to true, the script will stop and show you an interactive version of the chart before continuing.                | false              |
 
