@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
+import adjustText as adjustText
+
 import numpy as np
 import pandas as pd
 
@@ -48,8 +50,13 @@ class FlowMetricsService:
         plt.figure(figsize=(15, 9))
         plt.scatter(dates, cycle_times)
         
+        texts = []
         for item in items:
-            plt.annotate(item.item_title, (item.closed_date.date(), item.cycle_time), textcoords="offset points", xytext=(0,10), ha='center')
+            text = plt.text(item.closed_date.date(), item.cycle_time, item.item_title, ha='center')
+            texts.append(text)
+
+        # Adjust text to avoid overlap
+        adjustText.adjust_text(texts, arrowprops=dict(arrowstyle="-", color='k', lw=0.5))
         
         plt.title("Cycle Time Scatterplot")
         plt.xlabel("Work Item Closed Date")
@@ -91,6 +98,17 @@ class FlowMetricsService:
 
         # Plot Work Item Age as triangles
         plt.scatter(dates, work_item_ages, label='Work Item Age (days)', alpha=0.7)
+        
+        texts = []
+        for item in items:
+            work_item_age = item.work_item_age
+            
+            if work_item_age:
+                text = plt.text(item.started_date.date(), work_item_age, item.item_title, ha='center')
+                texts.append(text)
+
+        # Adjust text to avoid overlap
+        adjustText.adjust_text(texts, arrowprops=dict(arrowstyle="-", color='k', lw=0.5))
 
         plt.title("Work Item Age Scatterplot with Cycle Time Percentiles")
         plt.xlabel("Work Item Started Date")
@@ -318,6 +336,15 @@ class FlowMetricsService:
 
         plt.figure(figsize=(15, 9))
         plt.scatter(estimations, cycle_times)
+        
+        texts = []
+        for item in items:
+            text = plt.text(item.estimation, item.cycle_time, item.item_title, ha='center')
+            texts.append(text)
+
+        # Adjust text to avoid overlap
+        adjustText.adjust_text(texts, arrowprops=dict(arrowstyle="-", color='k', lw=0.5))
+        
         plt.title("Estimation vs. Cycle Time")
         plt.xlabel("Estimation ({0})".format(estimation_unit))
         plt.ylabel("Cycle Time (days)")
