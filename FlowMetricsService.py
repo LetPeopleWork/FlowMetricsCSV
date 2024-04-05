@@ -124,13 +124,11 @@ class FlowMetricsService:
             start_date = end_date - timedelta(days=history)
             items = [item for item in items if item.closed_date and start_date <= item.closed_date <= end_date]
 
-        if len(items) < 1:
-            print("No items within supplied history")
-            return
-
-        # Plot percentile lines for Cycle Time
-        for value, color in zip(x_axis_lines, x_axis_line_colors):
-            plt.axhline(y=value, color=color, linestyle='--', label=f'{value} Days')
+        if len(items) > 0:            
+            for value, color in zip(x_axis_lines, x_axis_line_colors):
+                plt.axhline(y=value, color=color, linestyle='--', label=f'{value} Days')
+        else:
+            print("No closed items, skipping cycle time percentiles in WIA Scatterplot")
 
         plt.legend()
 
