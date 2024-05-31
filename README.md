@@ -48,41 +48,51 @@ In the [config.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/c
     },
     "cycleTimeScatterPlot": {
         "generate": true,
-        "history": 30,
+        "history": 180,
         "chartName": "CycleTime.png",
         "percentiles": [50, 70, 85, 95],
         "percentileColors": ["red", "orange", "lightgreen", "darkgreen"]
     },
     "workItemAgeScatterPlot": {
         "generate": true,
-        "history": 30,
+        "history": 180,
         "chartName": "WorkItemAge.png",
         "xAxisLines": [5, 10],
         "xAxisLineColors": ["orange", "red"]
     },
     "throughputRunChart": {
         "generate": true,
-        "history": 90,
+        "history": 180,
         "unit": "days",
         "chartName": "Throughput.png"
     },
     "workInProcessRunChart": {
         "generate": true,
-        "history": 30,
+        "history": 180,
         "chartName": "WorkInProcess.png"
     },
     "startedVsFinishedChart": {
         "generate": true,
-        "history": 90,
+        "history": 180,
         "chartName": "StartedVsFinished.png",
         "startedColor": "orange",
         "closedColor": "green"
     },
     "estimationVsCycleTime": {
-        "generate": false,
-        "history": 90,
+        "generate": true,
+        "history": 180,
         "chartName": "EstimationVsCycleTime.png",
         "estimationUnit": "Story Points"
+    },
+    "processBehaviourCharts": {
+        "generate": true,
+        "baselineStart": "2024-01-01",
+        "baselineEnd": "2024-01-31",
+        "history": 60,
+        "throughputChartName": "Throughput_PBC.png",
+        "cycleTimeChartName": "CycleTime_PBC.png",
+        "wipChartName": "WorkInProgress_PBC.png",
+        "itemAgeChartName": "WorkItemAge_PBC.png"
     }
 }
   ```
@@ -159,6 +169,19 @@ In the [config.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/c
 | History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days.      | 90                 |
 | ChartName              | File name of the chart.          | EstimationVsCycleTime.png|
 | estimationUnit         | Unit of estimation that will be visible on the chart. Examples: Story Points, Hours, Ideal Days etc.          | Story Points |
+
+### Process Behaviour Chars
+
+| Name                   | Description                          | Default Value      |
+|------------------------|--------------------------------------|--------------------|
+| Generate               | Whether to generate the chart at all. If set to false, no further settings need to be specified. If enabled, process behaviour charts for all 4 measures of flow will be generated.         | true               |
+| BaselineStart          | The start date for your baseline for the PBCs. Follows the format "yyyy-MM-dd". The baseline is what defines the visualized average, as well as the upper and lower natural process limit.        | 2024-01-01               |
+| BaselineEnd            | The end date for your baseline for the PBCs. Follows the format "yyyy-MM-dd". The baseline is what defines the visualized average, as well as the upper and lower natural process limit.      | 2024-01-31               |
+| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days.      | 60                 |
+| ThroughputChartName    | File name of the Throughput PBC chart.          | Throughput_PBC.png|
+| CycleTimeChartName     | File name of the Cycle Time PBC chart.          | CycleTime_PBC.png|
+| WipChartName           | File name of the WIP PBC chart.          | WorkInProgress_PBC.png|
+| ItemAgeChartName       | File name of the Total Work Item Age PBC chart.          | WorkItemAge_PBC.png|
 
 ## Running the Script with different/multiple Configurations
 If not specified otherwise, the _config.json_ will be used. However, you can also override which config file should be used by specifying it as part of the command line when running the script:

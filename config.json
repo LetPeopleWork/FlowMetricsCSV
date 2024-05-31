@@ -44,7 +44,7 @@
         "closedColor": "green"
     },
     "estimationVsCycleTime": {
-        "generate": true,
+        "generate": false,
         "history": 180,
         "chartName": "EstimationVsCycleTime.png",
         "estimationUnit": "Story Points"
