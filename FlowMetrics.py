@@ -71,7 +71,8 @@ for config_path in config_paths:
         chart_config = config["throughputRunChart"]
 
         if chart_config["generate"]:
-            flow_metrics_service.plot_throughput_run_chart(work_items, chart_config["history"], chart_config["chartName"], chart_config["unit"])
+            flow_metrics_service.plot_throughput_run_chart(work_items, chart_config["history"], chart_config["chartName"], chart_config["unit"])            
+            
 
     def create_work_in_process_run_chart():
         chart_config = config["workInProcessRunChart"]
@@ -99,7 +100,10 @@ for config_path in config_paths:
             baseline_start = datetime.strptime(chart_config["baselineStart"], "%Y-%m-%d")
             baseline_end = datetime.strptime(chart_config["baselineEnd"], "%Y-%m-%d")
             
-            flow_metrics_service.plot_throughput_process_behaviour_chart(work_items, baseline_start, baseline_end, history, chart_config["throughputChartName"])
+            flow_metrics_service.plot_throughput_process_behaviour_chart(work_items, baseline_start, baseline_end, history, chart_config["throughputChartName"])            
+            flow_metrics_service.plot_wip_process_behaviour_chart(work_items, baseline_start, baseline_end, history, chart_config["wipChartName"])
+            flow_metrics_service.plot_cycle_time_process_behaviour_chart(work_items, baseline_start, baseline_end, history, chart_config["cycleTimeChartName"])       
+            flow_metrics_service.plot_total_age_process_behaviour_chart(work_items, baseline_start, baseline_end, history, chart_config["itemAgeChartName"])                        
 
     create_cycle_time_scatterplot()
     create_work_item_age_scatterplot()

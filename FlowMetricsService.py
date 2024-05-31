@@ -358,38 +358,83 @@ class FlowMetricsService:
         if self.show_plots:
             plt.show()
             
-    def plot_throughput_process_behaviour_chart(self, work_items, baseline_start_date, baseline_end_date, history, chart_name):        
-        baselin_closed_items = self.get_throughput_history_for_date_range(baseline_start_date, baseline_end_date, work_items)
+    def plot_total_age_process_behaviour_chart(self, work_items, baseline_start_date, baseline_end_date, history, chart_name):
+        baseline_total_age = self.get_total_age_history_for_date_range(baseline_start_date, baseline_end_date, work_items)
         
-        baseline_values = list(baselin_closed_items.values())
+        baseline_values = list(baseline_total_age.values())
+        (baseline_average, unpl, lnpl) = self.caclulate_average_and_limits(baseline_values)
+        
+        start_date = datetime.today() - timedelta(days=history)
+        total_age_data = self.get_total_age_history_for_date_range(start_date, datetime.today(), work_items)
+        
+        x_values = [datetime.today() - timedelta(days=days) for days in total_age_data.keys()]
+        y_values = list(total_age_data.values())
+        
+        self.plot_pbc(x_values, y_values, baseline_average, unpl, lnpl, "Total Work Item Age X Chart", "Date", "Total Age", chart_name)     
+            
+    def plot_cycle_time_process_behaviour_chart(self, work_items, baseline_start_date, baseline_end_date, history, chart_name):
+        baseline_cycle_time = self.get_cycle_time_history_for_date_range(baseline_start_date, baseline_end_date, work_items)
+        
+        baseline_values = list(baseline_cycle_time.values())
+        (baseline_average, unpl, lnpl) = self.caclulate_average_and_limits(baseline_values)
+        
+        start_date = datetime.today() - timedelta(days=history)
+        cycle_time_data = self.get_cycle_time_history_for_date_range(start_date, datetime.today(), work_items)
+        
+        x_values = list(cycle_time_data.keys())
+        y_values = list(cycle_time_data.values())
+        
+        self.plot_pbc(x_values, y_values, baseline_average, unpl, lnpl, "Cycle Time X Chart", "Item", "Cycle Time", chart_name)            
+
+    def plot_wip_process_behaviour_chart(self, work_items, baseline_start_date, baseline_end_date, history, chart_name):
+        baseline_wip = self.get_wip_history_for_date_range(baseline_start_date, baseline_end_date, work_items)
+        
+        baseline_values = list(baseline_wip.values())
+        (baseline_average, unpl, lnpl) = self.caclulate_average_and_limits(baseline_values)
+        
+        start_date = datetime.today() - timedelta(days=history)
+        wip_data = self.get_wip_history_for_date_range(start_date, datetime.today(), work_items)
+        
+        x_values = [datetime.today() - timedelta(days=days) for days in wip_data.keys()]        
+        y_values = list(wip_data.values())
+        
+        self.plot_pbc(x_values, y_values, baseline_average, unpl, lnpl, "WIP X Chart", "Date", "WIP", chart_name)
+            
+    def plot_throughput_process_behaviour_chart(self, work_items, baseline_start_date, baseline_end_date, history, chart_name):        
+        baseline_closed_items = self.get_throughput_history_for_date_range(baseline_start_date, baseline_end_date, work_items)
+        
+        baseline_values = list(baseline_closed_items.values())
         (baseline_average, unpl, lnpl) = self.caclulate_average_and_limits(baseline_values)
         
         start_date = datetime.today() - timedelta(days=history)
         throughput_data = self.get_throughput_history_for_date_range(start_date, datetime.today(), work_items)
         
-        dates = list(throughput_data.keys())
-        throughput_values = list(throughput_data.values())
-
-        # Plot throughput data
+        x_values = [datetime.today() - timedelta(days=days) for days in throughput_data.keys()]        
+        y_values = list(throughput_data.values())
+        
+        self.plot_pbc(x_values, y_values, baseline_average, unpl, lnpl, "Throughput X Chart", "Date", "Throughput", chart_name)
+        
+    def plot_pbc(self, x_values, y_values, average, unpl, lnpl, title, x_label, y_label, chart_name):
+        # Plot data
         plt.figure(figsize=(15, 9))
-        plt.plot(dates, throughput_values, marker='o', linestyle='-', color='b')
+        plt.plot(x_values, y_values, marker='o', linestyle='-', color='b')
 
         # Plot baseline average, unpl, and lnpl as horizontal lines
-        plt.axhline(y=baseline_average, color='r', linestyle='--', label='Average')
+        plt.axhline(y=average, color='r', linestyle='--', label='Average')
         plt.axhline(y=unpl, color='g', linestyle='--', label='Upper Natural Process Limit (UNPL)')
         
         if (lnpl > 0):
             plt.axhline(y=lnpl, color='y', linestyle='--', label='Lower Natural Process Limit (LNPL)')
 
         # Set x-axis label and rotate x-axis ticks for better readability
-        plt.xlabel('Date')
+        plt.xlabel(x_label)
         plt.xticks(rotation=45)
 
         # Set y-axis label
-        plt.ylabel('Throughput')
+        plt.ylabel(y_label)
 
         # Set chart title and legend
-        plt.title("Throughput X Chart")
+        plt.title(title)
         plt.legend()
         
         # Print Current Date
@@ -401,6 +446,63 @@ class FlowMetricsService:
 
         if self.show_plots:
             plt.show()
+
+            
+    def get_cycle_time_history_for_date_range(self, start_date, end_date, work_items):
+        filtered_items = [item for item in work_items if item.cycle_time and start_date <= item.closed_date <= end_date]
+            
+        # Sort the filtered items by closed_date
+        sorted_items = sorted(filtered_items, key=lambda item: item.closed_date)
+        
+        # Create a dictionary with integer keys starting from 0
+        sorted_items_dict = {index: item.cycle_time for index, item in enumerate(sorted_items)}
+        
+        return sorted_items_dict
+    
+    def get_total_age_history_for_date_range(self, start_date, end_date, work_items):
+        total_age_per_day = {}
+
+        # Iterate through each day from start_date to end_date
+        current_date = start_date
+        day_count = 0
+        while current_date <= end_date:
+            total_age_per_day[day_count] = 0
+
+            # Iterate through each item
+            for item in work_items:
+                # Check if the item was started but not closed on the current day
+                if item.started_date <= current_date and (not item.closed_date or item.closed_date > current_date):
+                    # Calculate the delta between the current date and the item's started date
+                    delta_days = (current_date - item.started_date).days
+                    # Increment total age by the delta
+                    total_age_per_day[day_count] += delta_days
+
+            # Move to the next day
+            current_date += timedelta(days=1)
+            day_count += 1
+
+        return total_age_per_day
+            
+    def get_wip_history_for_date_range(self, start_date, end_date, work_items):
+        count_per_day = {}
+
+        # Iterate through each day from start_date to end_date
+        current_date = start_date
+        day_count = 0  # Initialize day count
+        while current_date <= end_date:
+            count_per_day[day_count] = 0  # Initialize count to 0 for the current day
+            
+            # Iterate through each item
+            for item in work_items:
+                # Check if the item was started but not closed on the current day
+                if item.started_date <= current_date and (not item.closed_date or item.closed_date > current_date):
+                    count_per_day[day_count] += 1  # Increment count if the condition is met
+            
+            # Move to the next day
+            current_date += timedelta(days=1)
+            day_count += 1  # Increment day count
+
+        return count_per_day
         
     def get_throughput_history_for_date_range(self, start_date, end_date, work_items):
         closed_items_count = {}
