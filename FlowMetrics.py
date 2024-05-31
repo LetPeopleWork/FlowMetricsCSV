@@ -1,5 +1,6 @@
 import argparse
 
+from datetime import datetime
 from CsvService import CsvService
 from FlowMetricsService import FlowMetricsService
 
@@ -89,10 +90,21 @@ for config_path in config_paths:
 
         if chart_config["generate"]:
             flow_metrics_service.plot_estimation_vs_cycle_time_scatterplot(work_items, chart_config["history"], chart_config["chartName"], chart_config["estimationUnit"])
+    
+    def create_process_behaviour_charts():
+        chart_config = config["processBehaviourCharts"]
+
+        if chart_config["generate"]:
+            history = chart_config["history"]
+            baseline_start = datetime.strptime(chart_config["baselineStart"], "%Y-%m-%d")
+            baseline_end = datetime.strptime(chart_config["baselineEnd"], "%Y-%m-%d")
+            
+            flow_metrics_service.plot_throughput_process_behaviour_chart(work_items, baseline_start, baseline_end, history, chart_config["throughputChartName"])
 
     create_cycle_time_scatterplot()
     create_work_item_age_scatterplot()
     create_throughput_run_chart()
     create_work_in_process_run_chart()
     create_work_started_vs_finished_chart()
-    create_estimation_vs_cycle_time_chart()
+    create_estimation_vs_cycle_time_chart()    
+    create_process_behaviour_charts()

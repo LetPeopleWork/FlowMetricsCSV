@@ -357,3 +357,96 @@ class FlowMetricsService:
 
         if self.show_plots:
             plt.show()
+            
+    def plot_throughput_process_behaviour_chart(self, work_items, baseline_start_date, baseline_end_date, history, chart_name):        
+        baselin_closed_items = self.get_throughput_history_for_date_range(baseline_start_date, baseline_end_date, work_items)
+        
+        baseline_values = list(baselin_closed_items.values())
+        (baseline_average, unpl, lnpl) = self.caclulate_average_and_limits(baseline_values)
+        
+        start_date = datetime.today() - timedelta(days=history)
+        throughput_data = self.get_throughput_history_for_date_range(start_date, datetime.today(), work_items)
+        
+        dates = list(throughput_data.keys())
+        throughput_values = list(throughput_data.values())
+
+        # Plot throughput data
+        plt.figure(figsize=(15, 9))
+        plt.plot(dates, throughput_values, marker='o', linestyle='-', color='b')
+
+        # Plot baseline average, unpl, and lnpl as horizontal lines
+        plt.axhline(y=baseline_average, color='r', linestyle='--', label='Average')
+        plt.axhline(y=unpl, color='g', linestyle='--', label='Upper Natural Process Limit (UNPL)')
+        
+        if (lnpl > 0):
+            plt.axhline(y=lnpl, color='y', linestyle='--', label='Lower Natural Process Limit (LNPL)')
+
+        # Set x-axis label and rotate x-axis ticks for better readability
+        plt.xlabel('Date')
+        plt.xticks(rotation=45)
+
+        # Set y-axis label
+        plt.ylabel('Throughput')
+
+        # Set chart title and legend
+        plt.title("Throughput X Chart")
+        plt.legend()
+        
+        # Print Current Date
+        plt.text(1, 1.02, f"Generated on {self.current_date}", transform=plt.gca().transAxes, fontsize=10, ha='right', va='top')
+
+        chart_file_path = os.path.join(self.charts_folder, chart_name)
+        print("Storing file at {0}".format(chart_file_path))
+        plt.savefig(chart_file_path)
+
+        if self.show_plots:
+            plt.show()
+        
+    def get_throughput_history_for_date_range(self, start_date, end_date, work_items):
+        closed_items_count = {}
+        
+        date_range = (end_date - start_date).days + 1
+        
+        for index in range(date_range):
+            closed_items_count[index] = 0
+        
+        for item in work_items:
+            if item.closed_date and start_date <= item.closed_date <= end_date:
+                index = (item.closed_date - start_date).days
+                
+                closed_items_count[index] += 1
+                
+        return closed_items_count
+    
+    def caclulate_average_and_limits(self, baseline_values):
+        baseline_average = self.calculate_mean(baseline_values)
+        moving_ranges = self.calculate_moving_ranges(baseline_values)
+        moving_range_mean = self.calculate_mean(moving_ranges)
+        (unpl, lnpl) = self.calculate_natural_process_limits(baseline_average, moving_range_mean)
+        
+        print("Baseline Average: {0}".format(baseline_average))
+        print("Upper Natural Process Limit: {0}".format(unpl))
+        print("Lower Natural Process Limit: {0}".format(lnpl))
+        
+        return (baseline_average, unpl, lnpl)
+        
+    def calculate_mean(self, values):
+        mean = sum(values) / len(values)
+        
+        return mean
+        
+    def calculate_moving_ranges(self, values):
+        moving_ranges = []
+        for i in range(1, len(values)):
+            moving_range = abs(values[i] - values[i-1])
+            moving_ranges.append(moving_range)
+        return moving_ranges
+    
+    def calculate_natural_process_limits(self, baseline_average, baseline_moving_range_average):
+        unpl = baseline_average + (2.66 * baseline_moving_range_average)
+        lnpl = baseline_average - (2.66 * baseline_moving_range_average)
+        
+        if lnpl < 0:
+            lnpl = 0
+        
+        return (unpl, lnpl)
