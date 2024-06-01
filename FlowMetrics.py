@@ -11,11 +11,29 @@ parser.add_argument("--ConfigFileNames", type=str, nargs='+', default=["config.j
 
 args = parser.parse_args()
 
+def print_logo():
+    logo = r"""
+     /$$                 /$$           /$$$$$$$                           /$$                /$$      /$$                  /$$      
+    | $$                | $$          | $$__  $$                         | $$               | $$  /$ | $$                 | $$      
+    | $$       /$$$$$$ /$$$$$$        | $$  \ $$/$$$$$$  /$$$$$$  /$$$$$$| $$ /$$$$$$       | $$ /$$$| $$ /$$$$$$  /$$$$$$| $$   /$$
+    | $$      /$$__  $|_  $$_/        | $$$$$$$/$$__  $$/$$__  $$/$$__  $| $$/$$__  $$      | $$/$$ $$ $$/$$__  $$/$$__  $| $$  /$$/
+    | $$     | $$$$$$$$ | $$          | $$____| $$$$$$$| $$  \ $| $$  \ $| $| $$$$$$$$      | $$$$_  $$$| $$  \ $| $$  \__| $$$$$$/ 
+    | $$     | $$_____/ | $$ /$$      | $$    | $$_____| $$  | $| $$  | $| $| $$_____/      | $$$/ \  $$| $$  | $| $$     | $$_  $$ 
+    | $$$$$$$|  $$$$$$$ |  $$$$/      | $$    |  $$$$$$|  $$$$$$| $$$$$$$| $|  $$$$$$$      | $$/   \  $|  $$$$$$| $$     | $$ \  $$
+    |________/\_______/  \___/        |__/     \_______/\______/| $$____/|__/\_______/      |__/     \__/\______/|__/     |__/  \__/
+                                                                | $$                                                                
+                                                                | $$                                                                
+                                                                |__/                                                                
+    """
+    print(logo)
+
 def read_config(file_path):
     print("Reading Config File from {0}".format(file_path))
     with open(file_path, 'r') as file:
         config_data = json.load(file)
     return config_data
+
+print_logo()
 
 config_paths = args.ConfigFileNames
 print("Using following configuration files: {0}".format(config_paths))
@@ -112,3 +130,9 @@ for config_path in config_paths:
     create_work_started_vs_finished_chart()
     create_estimation_vs_cycle_time_chart()    
     create_process_behaviour_charts()
+    
+print()
+print()
+print()
+print("🛈 Want to learn more about how all of this works? Check out out website! 🛈")
+print("🔗 https://letpeople.work 🔗")
