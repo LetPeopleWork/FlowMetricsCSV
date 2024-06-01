@@ -375,16 +375,18 @@ class FlowMetricsService:
     def plot_cycle_time_process_behaviour_chart(self, work_items, baseline_start_date, baseline_end_date, history, chart_name):
         baseline_cycle_time = self.get_cycle_time_history_for_date_range(baseline_start_date, baseline_end_date, work_items)
         
-        baseline_values = list(baseline_cycle_time.values())
+        baseline_values = [item.cycle_time for item in baseline_cycle_time.values()]
         (baseline_average, unpl, lnpl) = self.caclulate_average_and_limits(baseline_values)
         
         start_date = datetime.today() - timedelta(days=history)
         cycle_time_data = self.get_cycle_time_history_for_date_range(start_date, datetime.today(), work_items)
         
         x_values = list(cycle_time_data.keys())
-        y_values = list(cycle_time_data.values())
+        y_values = [item.cycle_time for item in cycle_time_data.values()]
         
-        self.plot_pbc(x_values, y_values, baseline_average, unpl, lnpl, "Cycle Time X Chart", "Item", "Cycle Time", chart_name)            
+        item_texts = [item.item_title for item in cycle_time_data.values()]
+        
+        self.plot_pbc(x_values, y_values, baseline_average, unpl, lnpl, "Cycle Time X Chart", "Item", "Cycle Time", chart_name, item_texts)            
 
     def plot_wip_process_behaviour_chart(self, work_items, baseline_start_date, baseline_end_date, history, chart_name):
         baseline_wip = self.get_wip_history_for_date_range(baseline_start_date, baseline_end_date, work_items)
@@ -414,7 +416,7 @@ class FlowMetricsService:
         
         self.plot_pbc(x_values, y_values, baseline_average, unpl, lnpl, "Throughput X Chart", "Date", "Throughput", chart_name)
         
-    def plot_pbc(self, x_values, y_values, average, unpl, lnpl, title, x_label, y_label, chart_name):
+    def plot_pbc(self, x_values, y_values, average, unpl, lnpl, title, x_label, y_label, chart_name, item_texts = []):
         # Plot data
         plt.figure(figsize=(15, 9))
         plt.plot(x_values, y_values, marker='o', linestyle='-', color='b')
@@ -432,6 +434,14 @@ class FlowMetricsService:
 
         # Set y-axis label
         plt.ylabel(y_label)
+        
+        texts = []
+        for index in range(len(item_texts)):
+            text = plt.text(x_values[index], y_values[index], item_texts[index], ha='center')
+            texts.append(text)
+
+        # Adjust text to avoid overlap
+        adjustText.adjust_text(texts, arrowprops=dict(arrowstyle="-", color='k', lw=0.5))
 
         # Set chart title and legend
         plt.title(title)
@@ -452,10 +462,10 @@ class FlowMetricsService:
         filtered_items = [item for item in work_items if item.cycle_time and start_date <= item.closed_date <= end_date]
             
         # Sort the filtered items by closed_date
-        sorted_items = sorted(filtered_items, key=lambda item: item.closed_date)
+        sorted_items = sorted(filtered_items, key=lambda item: item.closed_date)        
         
         # Create a dictionary with integer keys starting from 0
-        sorted_items_dict = {index: item.cycle_time for index, item in enumerate(sorted_items)}
+        sorted_items_dict = {index: item for index, item in enumerate(sorted_items)}
         
         return sorted_items_dict
     
