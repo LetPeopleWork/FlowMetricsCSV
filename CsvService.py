@@ -23,7 +23,11 @@ class CsvService:
 
                 estimation = None
                 if estimation_column_name in row:
-                    estimation = int(row[estimation_column_name])
+                    raw_estimate = row[estimation_column_name]
+                    estimation = 0
+
+                    if raw_estimate:
+                        estimation = float(row[estimation_column_name])
                     
                 item_title = ""
                 if item_title_column in row:
