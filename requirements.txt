@@ -1,5 +1,0 @@
-argparse
-pandas
-numpy
-matplotlib
-adjustText

@@ -1,5 +1,3 @@
-from WorkItem import WorkItem
-
 from datetime import datetime, timedelta
 
 import matplotlib.pyplot as plt
@@ -26,8 +24,10 @@ class FlowMetricsService:
 
         if not os.path.exists(charts_folder):
             os.makedirs(charts_folder)
-            
-        self.logo = mpimg.imread('logo.png')
+        
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        logo_path = os.path.join(script_dir, "logo.png")
+        self.logo = mpimg.imread(logo_path)
 
        
     def plot_cycle_time_scatterplot(self, items, history, percentiles, percentile_colors, chart_name):
@@ -539,12 +539,7 @@ class FlowMetricsService:
         baseline_average = self.calculate_mean(baseline_values)
         moving_ranges = self.calculate_moving_ranges(baseline_values)
         moving_range_mean = self.calculate_mean(moving_ranges)
-        (unpl, lnpl) = self.calculate_natural_process_limits(baseline_average, moving_range_mean)
-        
-        print("Baseline Average: {0}".format(baseline_average))
-        print("Upper Natural Process Limit: {0}".format(unpl))
-        print("Lower Natural Process Limit: {0}".format(lnpl))
-        
+        (unpl, lnpl) = self.calculate_natural_process_limits(baseline_average, moving_range_mean)        
         return (baseline_average, unpl, lnpl)
         
     def calculate_mean(self, values):

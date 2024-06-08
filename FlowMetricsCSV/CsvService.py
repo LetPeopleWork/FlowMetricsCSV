@@ -1,4 +1,4 @@
-from WorkItem import WorkItem
+from .WorkItem import WorkItem
 from datetime import datetime
 
 import csv
