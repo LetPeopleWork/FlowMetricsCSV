@@ -543,7 +543,10 @@ class FlowMetricsService:
         return (baseline_average, unpl, lnpl)
         
     def calculate_mean(self, values):
-        mean = sum(values) / len(values)
+        mean = 0
+        
+        if len(values) > 0:
+            mean = sum(values) / len(values)
         
         return mean
         
