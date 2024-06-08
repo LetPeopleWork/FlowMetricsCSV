@@ -22,24 +22,31 @@ def print_logo():
     """
     print(logo)
 
-def copy_default_config_and_example_csv(script_dir):    
+def copy_default_config_and_example_csv(script_dir):        
     default_config_file = os.path.join(script_dir, "ExampleConfig.json")
     example_file = os.path.join(script_dir, "ExampleFile.csv")
     
     csv_file_destination = os.path.join(os.getcwd(), os.path.basename(example_file))
-    shutil.copy(example_file, csv_file_destination)
+    if not check_if_file_exists(csv_file_destination):
+        shutil.copy(example_file, csv_file_destination)
     
     config_file_destination = os.path.join(os.getcwd(), os.path.basename(default_config_file))        
-    shutil.copy(default_config_file, config_file_destination)
+    if not check_if_file_exists(config_file_destination):
+        shutil.copy(default_config_file, config_file_destination)
 
-def check_if_file_exists(file_path):
+def check_if_file_exists(file_path, raise_if_not_found = False):
     if not os.path.isfile(file_path):
-        raise FileNotFoundError(f"The file '{file_path}' does not exist.")
+        if raise_if_not_found:
+            raise FileNotFoundError(f"The file '{file_path}' does not exist.")
+        
+        return False
+    
+    return True
 
 def read_config(file_path):
     print("Reading Config File from {0}".format(file_path))
     
-    check_if_file_exists(file_path)
+    check_if_file_exists(file_path, True)
     
     with open(file_path, 'r') as file:
         config_data = json.load(file)
@@ -81,7 +88,7 @@ def main():
             charts_folder = config["general"]["chartsFolder"]
             
             print("Using following CSV file: {0}".format(file_name))
-            check_if_file_exists(file_name)
+            check_if_file_exists(file_name, True)
 
             if not closed_date_format:
                 closed_date_format = start_date_format

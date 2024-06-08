@@ -162,3 +162,5 @@ cython_debug/
 Charts/*
 .vscode/*
 configs/*
+ExampleConfig.json
+ExampleFile.csv
