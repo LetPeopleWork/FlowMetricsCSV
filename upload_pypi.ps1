@@ -18,7 +18,7 @@ if (-not $env:TWINE_PYPI_PASSWORD) {
 
 # Upload to PyPi using twine
 Write-Host "Uploading to PyPi using twine..."
-twine upload -u __token__ -p $env:TWINE_PYPI_PASSWORD "$DIST_FOLDER\*"
+twine upload -u __token__ -p $env:TWINE_PYPI_PASSWORD "$DIST_FOLDER/*"
 
 # Check if the twine command was successful
 if ($LastExitCode -ne 0) {
