@@ -1,34 +1,29 @@
 # Flow Metrics CSV
-This is a script that visualizes the four measures of flow based on any csv file. It can be run offline, and all it needs is a csv file with the start and closing dates of the items. Items that are still in progress, have no value for the closed date. My hope is that this will allow organizations that don't want to rely on any SaaS products or third party tools to still harness the power of Flow Metrics.
-Feel free to check out the code, propose improvements and also make it your own by adjusting it to your context and potentially integrating it into some kind of pipeline of yours. The true power of Flow Metrics comes when inspected on a regular base. The point of collecting data is to take action, so use this to make informed decisions about what you want to adjust! You can use this for free, hope it helps.
+This python package allos you to visualizes the four measures of flow based on any csv file. It can be run offline, and all it needs is a csv file with the start and closing dates of the items. Items that are still in progress, have no value for the closed date. Feel free to check out the code, propose improvements and also make it your own by adjusting it to your context and potentially integrating it into some kind of pipeline of yours. The true power of Flow Metrics comes when inspected on a regular base. The point of collecting data is to take action, so use this to make informed decisions about what you want to adjust! You can use this for free, hope it helps.
 
-If you like it and use the script, I'm happy if I can mention you/your company in the readme or for an attribution on [LinkedIn](https://www.linkedin.com/in/huserben/).
+This script is provided for free by [LetPeopleWork](https://letpeople.work). If you are curious about Flow Metrics, Kanban, #NoEstimates etc., feel free to reach out to us and book a call!
 
-## Download Files
-In order to run the scripts, you need to download all the files in this repository. There are dependencies between the files so you cannot just download a single file. Please always use the full folder structure.
-
-## Install Prerequisites
+## Installation
 Make sure you have python 3.x installed on your system and it's available via your PATH variable. You can check this by running `python --version` on your terminal. If it works without error, you have python installed and ready. If not, you can download it from the [official Python Website](https://www.python.org/downloads/).
 
 **Important:** It can be that you have to use `python3 --version`. If this is the case, please use always `python3` instead of `python` in the following commands.
 
-Once you have made sure python is installed, you can fetch the required python packages:
-Run `python -m pip install -r .\requirements.txt` from the directory that contains the scripts.
+Once you have made sure python is installed, you can download `flowmetricscsv` via pip:
+`python -m pip install --upgrade flowmetricscsv`
 
-**Important:** If you are on Linux or MacOS, the paths work differently. Use "/" instead of "\" for all the commands that follow. So the above command would look like this for MacOS/Linux:
-`python -m pip install -r ./requirements.txt`
+## Run flowmetricscsv
+If your installation was successfull, you can now run `flowmetricscsv` via the commandline. When not supplied with any parameter for a configuration file, it will automatically copy the `ExampleConfig.json` together with the `ExampleFile.csv` to your current directory and use those to generate the charts. After you've run `flowmetricscsv` you should have the 2 files in your current directory as well as a folder called `Charts` that includes the generated from the example data.
+
+You can now start to tweak the configuration and replace the csv file according to your needs.
+**Note**: It's recommended to rename your config file from *ExampleConfig.json* to something more meaningful (like *TeamNameConfig.json*) and to specify this configuration file when running it again: `flowmetricscsv --ConfigFileNames "TeamNameConfig.json"`.
+
+Read on to see details about how to configure `flowmetricscsv`.
 
 ## Create Flow Metrics Visulization
-To create the visulizations with this script, you need various inputs. First and foremost, you need to provide a csv file that includes the date when an item was started and closed (unless it's still in progress). The csv can contain other information, but it's not needed nor relevant for any of the visulizations. Using the "history" parameter, you can define which perioud you want to visualize. Do you want to see the last 30 days or rather the last 90 days?
-
-### Run using the example values
-The repo comes with an example configuration including an example csv file.
-Simply run `python .\FlowMetrics.py` to run the visualization. 
-
-If it runs successfully, it will store all the generated charts in a folder called "Charts" next to your script location.
+To create the visulizations with `flowmetricscsv`, you need various inputs. First and foremost, you need to provide a csv file that includes the date when an item was started and closed (unless it's still in progress). The csv can contain other information, but it's not needed nor relevant for any of the visulizations. Using the "history" parameter, you can define which perioud you want to visualize. Do you want to see the last 30 days or rather the last 90 days?
 
 ## Configuration
-In the [config.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/config.json) file you can see the default configuration. There are general settings and configurations per chart. Below you can find a summary of the various options.
+In the [ExampleConfig.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/ExampleConfig.json) file you can see the default configuration. There are general settings and configurations per chart. Below you can find a summary of the various options.
 
 <details>
   <summary>Sample Configuration</summary>
@@ -183,16 +178,46 @@ In the [config.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/c
 | WipChartName           | File name of the WIP PBC chart.          | WorkInProgress_PBC.png|
 | ItemAgeChartName       | File name of the Total Work Item Age PBC chart.          | WorkItemAge_PBC.png|
 
-## Running the Script with different/multiple Configurations
-If not specified otherwise, the _config.json_ will be used. However, you can also override which config file should be used by specifying it as part of the command line when running the script:
-`python .\FlowMetrics.py --ConfigFileNames ".\myOtherConfig.json"`
-
-That way, you can have multiple configurations that you can use to create different charts. For example for different teams or different item types (for example if you want to visualize Epics differently than other work items).
+## Running flowmetricscsv with multiple Configurations
+You can have multiple configurations that you can use to create different charts. For example for different teams or different item types (for example if you want to visualize Epics differently than other work items).
 Each configuration is independent and can work against different input files. If you want to generate many charts at once with different configurations, you can also specify multiple configuration files:
-`python .\FlowMetrics.py --ConfigFileNames ".\TeamA_Config.json" ".\TeamB_Config.json" ".\TeamC_Config.json"`
+`flowmetricscsv --ConfigFileNames "TeamA_Config.json" "TeamB_Config.json" "TeamC_Config.json"`
 
 This will generate you three sets of charts as per the individual configurations specified.
 **Note:** Make sure to specify different folders or chart names in the respective configs, as otherwise they will be overwritten.
 
 # How to use the created charts?
 You find more information on this in the [wiki](https://github.com/LetPeopleWork/FlowMetricsCSV/wiki)
+
+# Usage of flowmetricscsv in other python scripts
+If you want to reuse `flowmetricscsv` in your own python scripts, you can do so in two ways described below.
+This might be useful if you generate a csv in python and want to directly pass it to `flowmetricscsv` to generate charts, or you simply want to reuse dedicated functions to generate specific charts.
+
+## Call with sys args
+You can simply invoke the whole program and specify which configuration file to use, by using `sys.argv`. You can find an example in the following file in the *Examples* folder: [call_via_sys.py](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/Examples/call_via_sys.py)
+
+## Generate Specific Charts
+If you don't want to call the full application, but you either want to create only specific charts or not bother creating the config file, you can also call dedicated functions from the `FlowMetricsService`.
+You don't need the config file for this, but you have to supply different parameters to the functions yourself that otherwise are read from the config file. You also must specify all the work items that are of type [WorkItem](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/FlowMetricsCSV/WorkItem.py) as input to the functions. The easiest way is to use the provided [CsvService](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/FlowMetricsCSV/CsvService.py) to parse an existing csv file. But you can also use other ways to generate the `WorkItem` objects.
+
+In the Example folder, you find one example on how you can use this in the file [use_individual_services.py](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/Examples/use_individual_services.py).
+
+### FlowMetricService Functions
+Following is an overview over the functions the [FlowMetricsService](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/FlowMetricsCSV/FlowMetricsService.py) is providing.
+
+#### Initialization
+To initialize the service, provide parameters `show_plots` (boolean) and `charts_folder` (string) which represents whether to show plots immediately and the folder to store generated charts respectively.
+
+#### Plot Functions
+| Function | Description |
+|----------|-------------|
+| `plot_cycle_time_scatterplot` | Creates a scatterplot of Cycle Time against Work Item Closed Date with percentiles. |
+| `plot_work_item_age_scatterplot` | Generates a scatterplot of Work Item Age against Work Item Started Date with optional x-axis lines. |
+| `plot_throughput_run_chart` | Plots Throughput Run Chart displaying items completed over time. |
+| `plot_work_in_process_run_chart` | Creates a Work In Process (WIP) Run Chart showing the number of items in process over time. |
+| `plot_work_started_vs_finished_chart` | Generates a chart comparing Work Items started vs. finished over time. |
+| `plot_estimation_vs_cycle_time_scatterplot` | Plots Estimation vs. Cycle Time scatterplot. |
+| `plot_total_age_process_behaviour_chart` | Generates Total Work Item Age Process Behavior Chart. |
+| `plot_cycle_time_process_behaviour_chart` | Creates Cycle Time Process Behavior Chart. |
+| `plot_wip_process_behaviour_chart` | Generates Work In Process (WIP) Process Behavior Chart. |
+| `plot_throughput_process_behaviour_chart` | Plots Throughput Process Behavior Chart. |
