@@ -30,7 +30,7 @@ jobs:
 
       - name: Build and publish to TestPyPi
         run: |
-          pwsh -File ./upload_to_testpypi.ps1
+          pwsh ./upload_test_pypi.ps1
 
   publish_to_pypi:
     name: Publish to PyPi (Manual Approval)
@@ -57,4 +57,4 @@ jobs:
 
       - name: Build and publish to PyPi
         run: |
-          pwsh -File ./upload_to_pypi.ps1
+          pwsh ./upload_pypi.ps1
