@@ -12,7 +12,7 @@ Once you have made sure python is installed, you can download `flowmetricscsv` v
 `python -m pip install --upgrade flowmetricscsv`
 
 ## Run flowmetricscsv
-If your installation was successfull, you can now run `flowmetricscsv` via the commandline. When not supplied with any parameter for a configuration file, it will automatically copy the `ExampleConfig.json` together with the `ExampleFile.csv` to your current directory and use those to generate the charts. After you've run `flowmetricscsv` you should have the 2 files in your current directory as well as a folder called `Charts` that includes the generated from the example data.
+If your installation was successfull, you can now run `flowmetricscsv` via the commandline. When not supplied with any parameter for a configuration file, it will automatically copy the `ExampleConfig.json` and will auto-generate an `ExampleFile.csv` to your current directory and use those to generate the charts. After you've run `flowmetricscsv` you should have the 2 files in your current directory as well as a folder called `Charts` that includes the generated from the example data.
 
 You can now start to tweak the configuration and replace the csv file according to your needs.
 **Note**: It's recommended to rename your config file from *ExampleConfig.json* to something more meaningful (like *TeamNameConfig.json*) and to specify this configuration file when running it again: `flowmetricscsv --ConfigFileNames "TeamNameConfig.json"`.

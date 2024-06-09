@@ -1,5 +1,7 @@
 from .WorkItem import WorkItem
-from datetime import datetime
+from datetime import datetime, timedelta
+
+import random
 
 import csv
 
@@ -38,3 +40,36 @@ class CsvService:
         print("Found {0} Items in the CSV".format(len(work_items)))
 
         return work_items
+
+    def write_example_file(self, file_path, delimeter, started_date_column_name, closed_date_column_name, start_date_format, closed_date_format, estimation_column_name, item_title_column):
+        print("Writing Example File with random values to {0}".format(file_path))
+        
+        with open(file_path, 'w', newline='') as file:
+            writer = csv.writer(file, delimiter=delimeter)
+            field = [started_date_column_name, closed_date_column_name, estimation_column_name, item_title_column]
+            
+            # Write Header
+            writer.writerow(field)
+            
+            story_points = [1, 2, 3, 5, 8, 13]
+            
+            # Generate and write 100 random dates
+            for index in range(100):
+                start_date_delta = random.randint(0, 30)
+                
+                random.seed()
+                
+                end_date_delta = random.randint(0, 30)
+                
+                random_start_date = datetime.now() - timedelta(days=start_date_delta)
+                random_end_date = datetime.now() - timedelta(days=end_date_delta)
+                
+                started_date = random_start_date.strftime(start_date_format)
+                end_date = ""
+                
+                if end_date_delta <= start_date_delta:
+                    end_date = random_end_date.strftime(closed_date_format)
+                
+                estimation = random.choice(story_points)
+                
+                writer.writerow([started_date, end_date, estimation, index])

@@ -22,13 +22,8 @@ def print_logo():
     """
     print(logo)
 
-def copy_default_config_and_example_csv(script_dir):        
+def copy_default_config(script_dir):        
     default_config_file = os.path.join(script_dir, "ExampleConfig.json")
-    example_file = os.path.join(script_dir, "ExampleFile.csv")
-    
-    csv_file_destination = os.path.join(os.getcwd(), os.path.basename(example_file))
-    if not check_if_file_exists(csv_file_destination):
-        shutil.copy(example_file, csv_file_destination)
     
     config_file_destination = os.path.join(os.getcwd(), os.path.basename(default_config_file))        
     if not check_if_file_exists(config_file_destination):
@@ -65,10 +60,12 @@ def main():
         
         config_paths = args.ConfigFileNames
         
+        using_example_config = False
         if len(config_paths) < 1:
             print("No config file specified, copying defaults and using them")
-            copy_default_config_and_example_csv(script_dir)
+            copy_default_config(script_dir)
             config_paths.append("ExampleConfig.json")
+            using_example_config = True
         
         print("Using following configuration files: {0}".format(config_paths))
 
@@ -87,14 +84,17 @@ def main():
             show_plots = config["general"]["showPlots"]
             charts_folder = config["general"]["chartsFolder"]
             
-            print("Using following CSV file: {0}".format(file_name))
-            check_if_file_exists(file_name, True)
-
             if not closed_date_format:
                 closed_date_format = start_date_format
-                
+            
             csv_service = CsvService()
             flow_metrics_service = FlowMetricsService(show_plots, charts_folder)
+            
+            print("Using following CSV file: {0}".format(file_name))
+            file_exists = check_if_file_exists(file_name, not using_example_config)                
+            
+            if using_example_config and not file_exists:
+                csv_service.write_example_file(file_name, deliemter, started_date_column, closed_date_column, start_date_format, closed_date_format, estimation_column, item_title_column)
 
             def get_items():    
                 work_items = csv_service.parse_items(file_name, deliemter, started_date_column, closed_date_column, start_date_format, closed_date_format, estimation_column, item_title_column)

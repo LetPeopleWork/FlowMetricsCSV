@@ -13,39 +13,39 @@
     },
     "cycleTimeScatterPlot": {
         "generate": true,
-        "history": 180,
+        "history": 30,
         "chartName": "CycleTime.png",
         "percentiles": [50, 70, 85, 95],
         "percentileColors": ["red", "orange", "lightgreen", "darkgreen"]
     },
     "workItemAgeScatterPlot": {
         "generate": true,
-        "history": 180,
+        "history": 30,
         "chartName": "WorkItemAge.png",
         "xAxisLines": [5, 10],
         "xAxisLineColors": ["orange", "red"]
     },
     "throughputRunChart": {
         "generate": true,
-        "history": 180,
+        "history": 30,
         "unit": "days",
         "chartName": "Throughput.png"
     },
     "workInProcessRunChart": {
         "generate": true,
-        "history": 180,
+        "history": 30,
         "chartName": "WorkInProcess.png"
     },
     "startedVsFinishedChart": {
         "generate": true,
-        "history": 180,
+        "history": 30,
         "chartName": "StartedVsFinished.png",
         "startedColor": "orange",
         "closedColor": "green"
     },
     "estimationVsCycleTime": {
-        "generate": false,
-        "history": 180,
+        "generate": true,
+        "history": 30,
         "chartName": "EstimationVsCycleTime.png",
         "estimationUnit": "Story Points"
     },
@@ -53,7 +53,7 @@
         "generate": true,
         "baselineStart": "2024-01-01",
         "baselineEnd": "2024-01-31",
-        "history": 60,
+        "history": 30,
         "throughputChartName": "Throughput_PBC.png",
         "cycleTimeChartName": "CycleTime_PBC.png",
         "wipChartName": "WorkInProgress_PBC.png",
