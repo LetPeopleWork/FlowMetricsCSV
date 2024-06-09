@@ -1,0 +1,7 @@
+argparse
+pandas
+numpy
+matplotlib
+wheel
+twine
+setuptools
