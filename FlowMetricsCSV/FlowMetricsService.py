@@ -30,8 +30,8 @@ class FlowMetricsService:
         self.logo = mpimg.imread(logo_path)
 
        
-    def plot_cycle_time_scatterplot(self, items, history, percentiles, percentile_colors, chart_name):
-        print("Creating Cycle Time Scatterplot with following config: History: {0}, Chart Name: {1}, Percentiles: {2}, Percentile Colors: {3}".format(history, chart_name, percentiles, percentile_colors))
+    def plot_cycle_time_scatterplot(self, items, history, percentiles, percentile_colors, chart_name, trend_settings = None):        
+        print("Creating Cycle Time Scatterplot with following config: History: {0}, Chart Name: {1}, Percentiles: {2}, Percentile Colors: {3}, Trend Settings: {4}".format(history, chart_name, percentiles, percentile_colors, trend_settings))
 
         cycle_times = [item.cycle_time for item in items if item.cycle_time is not None]
 
@@ -53,7 +53,7 @@ class FlowMetricsService:
 
         plt.figure(figsize=(15, 9))
         plt.scatter(dates, cycle_times)
-        
+
         texts = []
         for item in items:
             text = plt.text(item.closed_date.date(), item.cycle_time, item.item_title, ha='center')
@@ -61,7 +61,7 @@ class FlowMetricsService:
 
         # Adjust text to avoid overlap
         adjustText.adjust_text(texts, arrowprops=dict(arrowstyle="-", color='k', lw=0.5))
-        
+
         plt.title("Cycle Time Scatterplot")
         plt.xlabel("Work Item Closed Date")
         plt.ylabel("Cycle Time (days)")
@@ -77,8 +77,21 @@ class FlowMetricsService:
         for value, label, color in zip(percentile_values, percentiles, percentile_colors):
             plt.axhline(y=value, color=color, linestyle='--', label=f'{label}th Percentile ({int(value)} Days)')
 
-        plt.legend()
+        # Calculate the rolling percentile for the specified window size        
         
+        if trend_settings:
+            trend_window_size = trend_settings[1]
+            trend_percentile = trend_settings[0]
+            trend_color = trend_settings[2]
+        
+            if len(dates) >= trend_window_size:
+                df = pd.DataFrame({'date': dates, 'cycle_time': cycle_times})
+                df.sort_values('date', inplace=True)
+                rolling_percentile_values = df['cycle_time'].rolling(window=trend_window_size).apply(lambda x: np.percentile(x, trend_percentile), raw=True)
+                plt.plot(df['date'], rolling_percentile_values, label=f'{trend_window_size}-day Trend ({trend_percentile}th Percentile)', color=trend_color, linestyle='dotted')
+
+        plt.legend()
+
         self.add_logo(plt)
 
         chart_file_path = os.path.join(self.charts_folder, chart_name)

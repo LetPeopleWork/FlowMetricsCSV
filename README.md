@@ -25,74 +25,6 @@ To create the visulizations with `flowmetricscsv`, you need various inputs. Firs
 ## Configuration
 In the [ExampleConfig.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/ExampleConfig.json) file you can see the default configuration. There are general settings and configurations per chart. Below you can find a summary of the various options.
 
-<details>
-  <summary>Sample Configuration</summary>
-  ```json
-{
-    "general": {
-        "fileName": "ExampleFile.csv",
-        "delimeter": ";",
-        "startedDateColumn": "Activated Date",
-        "closedDateColumn": "Closed Date",
-        "startDateFormat": "%m/%d/%Y %I:%M:%S %p",
-        "closedDateFormat": "",
-        "estimationColumn": "Story Points",
-        "itemTitleColumn": "ID",
-        "chartsFolder": "Charts",
-        "showPlots": false
-    },
-    "cycleTimeScatterPlot": {
-        "generate": true,
-        "history": 180,
-        "chartName": "CycleTime.png",
-        "percentiles": [50, 70, 85, 95],
-        "percentileColors": ["red", "orange", "lightgreen", "darkgreen"]
-    },
-    "workItemAgeScatterPlot": {
-        "generate": true,
-        "history": 180,
-        "chartName": "WorkItemAge.png",
-        "xAxisLines": [5, 10],
-        "xAxisLineColors": ["orange", "red"]
-    },
-    "throughputRunChart": {
-        "generate": true,
-        "history": 180,
-        "unit": "days",
-        "chartName": "Throughput.png"
-    },
-    "workInProcessRunChart": {
-        "generate": true,
-        "history": 180,
-        "chartName": "WorkInProcess.png"
-    },
-    "startedVsFinishedChart": {
-        "generate": true,
-        "history": 180,
-        "chartName": "StartedVsFinished.png",
-        "startedColor": "orange",
-        "closedColor": "green"
-    },
-    "estimationVsCycleTime": {
-        "generate": true,
-        "history": 180,
-        "chartName": "EstimationVsCycleTime.png",
-        "estimationUnit": "Story Points"
-    },
-    "processBehaviourCharts": {
-        "generate": true,
-        "baselineStart": "2024-01-01",
-        "baselineEnd": "2024-01-31",
-        "history": 60,
-        "throughputChartName": "Throughput_PBC.png",
-        "cycleTimeChartName": "CycleTime_PBC.png",
-        "wipChartName": "WorkInProgress_PBC.png",
-        "itemAgeChartName": "WorkItemAge_PBC.png"
-    }
-}
-  ```
-</details>
-
 ### General
 
 | Name                   | Description                          | Default Value      |
@@ -117,6 +49,7 @@ In the [ExampleConfig.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob
 | ChartName              | File name of the chart.     | CycleTime.png      |
 | Percentiles            | List of which percentiles should be shown in the chart. Can be any value from 1 to 100.     | [50, 70, 85, 95]    |
 | PercentileColors       | Colors for the percentiles defined. The amount has to match with what you specified above. Colors are associated by sequence. | [red, orange, lightgreen, darkgreen]|
+| Trend Settings         | Describes what trend you want to display. Remove line completely if you don't want a trend. Specifies which percentile you want to display, what is the "rolling window" of the trend you want to see, as well as the color the trend should have. | [70, 10, "purple"] --> Show a purple line for the average 70th percentile over the last 10 days. |
 
 ### Work Item Age Scatter Plot
 
