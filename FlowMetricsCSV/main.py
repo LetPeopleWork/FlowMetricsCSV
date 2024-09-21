@@ -74,7 +74,7 @@ def main():
             config = read_config(config_path)
 
             file_name = config["general"]["fileName"]
-            deliemter = config["general"]["delimeter"]
+            delimiter = config["general"].get("delimiter", config["general"].get("delimeter"))
             started_date_column = config["general"]["startedDateColumn"]
             closed_date_column = config["general"]["closedDateColumn"]
             start_date_format = config["general"]["startDateFormat"]
@@ -94,10 +94,10 @@ def main():
             file_exists = check_if_file_exists(file_name, not using_example_config)                
             
             if using_example_config and not file_exists:
-                csv_service.write_example_file(file_name, deliemter, started_date_column, closed_date_column, start_date_format, closed_date_format, estimation_column, item_title_column)
+                csv_service.write_example_file(file_name, delimiter, started_date_column, closed_date_column, start_date_format, closed_date_format, estimation_column, item_title_column)
 
             def get_items():    
-                work_items = csv_service.parse_items(file_name, deliemter, started_date_column, closed_date_column, start_date_format, closed_date_format, estimation_column, item_title_column)
+                work_items = csv_service.parse_items(file_name, delimiter, started_date_column, closed_date_column, start_date_format, closed_date_format, estimation_column, item_title_column)
                 return work_items
 
             print("Creating Charts as per the configuration...")

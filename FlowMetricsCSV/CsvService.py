@@ -7,12 +7,12 @@ import csv
 
 class CsvService:    
        
-    def parse_items(self, file_path, delimeter, started_date_column_name, closed_date_column_name, start_date_format, closed_date_format, estimation_column_name, item_title_column):
+    def parse_items(self, file_path, delimiter, started_date_column_name, closed_date_column_name, start_date_format, closed_date_format, estimation_column_name, item_title_column):
         print("Loading Items from CSV File: '{0}'. Started Date Column Name '{1}', Closed Date Column Name '{2}', Start Date Format '{3}', and Closed Date Format '{4}'".format(file_path, started_date_column_name, closed_date_column_name, start_date_format, closed_date_format))
         work_items = []
         
         with open(file_path, 'r', encoding='utf-8-sig') as file:
-            csv_reader = csv.DictReader(file, delimiter=delimeter)
+            csv_reader = csv.DictReader(file, delimiter=delimiter)
             
             for row in csv_reader:
                 closed_date = row[closed_date_column_name]
@@ -41,11 +41,11 @@ class CsvService:
 
         return work_items
 
-    def write_example_file(self, file_path, delimeter, started_date_column_name, closed_date_column_name, start_date_format, closed_date_format, estimation_column_name, item_title_column):
+    def write_example_file(self, file_path, delimiter, started_date_column_name, closed_date_column_name, start_date_format, closed_date_format, estimation_column_name, item_title_column):
         print("Writing Example File with random values to {0}".format(file_path))
         
         with open(file_path, 'w', newline='') as file:
-            writer = csv.writer(file, delimiter=delimeter)
+            writer = csv.writer(file, delimiter=delimiter)
             field = [started_date_column_name, closed_date_column_name, estimation_column_name, item_title_column]
             
             # Write Header

@@ -33,7 +33,7 @@ In the [ExampleConfig.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob
 | Name                   | Description                          | Default Value      |
 |------------------------|--------------------------------------|--------------------|
 | FileName               | The name of the CSV file you want to use as input. Can be a relative path from the script location (like in the example) or a full path if the files are somewhere else.             | ExampleFile.csv   |
-| Delimeter              | The delimiter used in the CSV file   | ;                  |
+| Delimiter              | The delimiter used in the CSV file   | ;                  |
 | StartedDateColumn      | The name of the column in the csv file that contains the started date       | Activated Date     |
 | ClosedDateColumn       | The name of the column in the csv file that contains the closed date          | Closed Date        |
 | StartDateFormat        | The format of the start dates in the csv file. Default is "%m/%d/%Y %I:%M:%S %p". Check [Python Dates](https://www.w3schools.com/python/python_datetime.asp) for the options you have (or ask ChatGPT)       | %m/%d/%Y %I:%M:%S %p|
