@@ -330,8 +330,11 @@ class FlowMetricsService:
 
     def plot_estimation_vs_cycle_time_scatterplot(self, items, history, chart_name, estimation_unit):
         print("Creating Estimation vs. Cycle Time Scatterplot with the following config: History: {0}, Chart Name: {1}, Estimation Unit: {2}".format(history, chart_name, estimation_unit))
+        
+        # Ignore items without cycle time and without estimation
+        filtered_items = [item for item in items if item.cycle_time and item.cycle_time is not None and item.estimation is not None and item.estimation > 0]
 
-        cycle_times = [item.cycle_time for item in items if item.cycle_time is not None]
+        cycle_times = [item.cycle_time for item in filtered_items if item.cycle_time is not None]
 
         if not cycle_times:
             print("No closed work items for plotting.")
@@ -341,9 +344,9 @@ class FlowMetricsService:
             # Filter items based on the history parameter
             end_date = datetime.today()
             start_date = end_date - timedelta(days=history)
-            items = [item for item in items if item.closed_date and item.started_date and start_date <= item.closed_date <= end_date]
-            cycle_times = [item.cycle_time for item in items if item.cycle_time is not None]
-            estimations = [item.estimation for item in items if item.cycle_time and item.estimation is not None]
+            items = [item for item in filtered_items if item.closed_date and item.started_date and start_date <= item.closed_date <= end_date]
+            cycle_times = [item.cycle_time for item in items]
+            estimations = [item.estimation for item in items]
 
         if not cycle_times:
             print("No closed work items within the specified history for plotting.")
