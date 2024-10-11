@@ -23,7 +23,7 @@ You can now start to tweak the configuration and replace the csv file according 
 Read on to see details about how to configure `flowmetricscsv`.
 
 ## Create Flow Metrics Visulization
-To create the visulizations with `flowmetricscsv`, you need various inputs. First and foremost, you need to provide a csv file that includes the date when an item was started and closed (unless it's still in progress). The csv can contain other information, but it's not needed nor relevant for any of the visulizations. Using the "history" parameter, you can define which perioud you want to visualize. Do you want to see the last 30 days or rather the last 90 days?
+To create the visulizations with `flowmetricscsv`, you need various inputs. First and foremost, you need to provide a csv file that includes the date when an item was started and closed (unless it's still in progress). The csv can contain other information, but it's not needed nor relevant for any of the visulizations. Using the "history" parameter, you can define which period you want to visualize. Do you want to see the last 30 days or rather the last 90 days? You can specify either a fixed number of days (use the last x days to create a rolling period), or a fixed date (use all items that are newer than the specified date).
 
 ## Configuration
 In the [ExampleConfig.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob/main/ExampleConfig.json) file you can see the default configuration. There are general settings and configurations per chart. Below you can find a summary of the various options.
@@ -48,7 +48,7 @@ In the [ExampleConfig.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob
 | Name                   | Description                          | Default Value      |
 |------------------------|--------------------------------------|--------------------|
 | Generate               | Whether to generate the chart at all. If set to false, no further settings need to be specified.        | true               |
-| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days.      | 30                 |
+| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days or as a date in the format "YYYY-MM-dd" (2024-08-19).      | 30                 |
 | ChartName              | File name of the chart.     | CycleTime.png      |
 | Percentiles            | List of which percentiles should be shown in the chart. Can be any value from 1 to 100.     | [50, 70, 85, 95]    |
 | PercentileColors       | Colors for the percentiles defined. The amount has to match with what you specified above. Colors are associated by sequence. | [red, orange, lightgreen, darkgreen]|
@@ -59,7 +59,7 @@ In the [ExampleConfig.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob
 | Name                   | Description                          | Default Value      |
 |------------------------|--------------------------------------|--------------------|
 | Generate               | Whether to generate the chart at all. If set to false, no further settings need to be specified.         | true               |
-| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days.      | 30                 |
+| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days. The value is in days or as a date in the format "YYYY-MM-dd" (2024-08-19).      | 30                 |
 | ChartName              | File name of the chart.       | WorkItemAge.png    |
 | XAxisLines             | List of which lines should be shown on the x-axis (in days). This can be useful to track if your items approach their [Service Level Expectation](https://kanbanguides.org/english/).      | [5, 10]            |
 | XAxisLineColors        | Colors for corresponding X-axis lines. The amount has to match with what you specified above. Colors are associated by sequence. | [orange, red]      |
@@ -69,7 +69,7 @@ In the [ExampleConfig.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob
 | Name                   | Description                          | Default Value      |
 |------------------------|--------------------------------------|--------------------|
 | Generate               | Whether to generate the chart at all. If set to false, no further settings need to be specified.         | true               |
-| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days.      | 90                 |
+| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days. The value is in days or as a date in the format "YYYY-MM-dd" (2024-08-19).     | 90                 |
 | Unit                   | Which grouping is applied. Possible options are 'days', 'weeks', and 'months'    | days               |
 | ChartName              | File name of the chart.               | Throughput.png     |
 
@@ -78,7 +78,7 @@ In the [ExampleConfig.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob
 | Name                   | Description                          | Default Value      |
 |------------------------|--------------------------------------|--------------------|
 | Generate               | Whether to generate the chart at all. If set to false, no further settings need to be specified.         | true               |
-| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days.      | 30                 |
+| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days. The value is in days or as a date in the format "YYYY-MM-dd" (2024-08-19).     | 30                 |
 | ChartName              | File name of the chart.                 | WorkInProcess.png  |
 
 ### Started Vs FinishedChart
@@ -86,7 +86,7 @@ In the [ExampleConfig.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob
 | Name                   | Description                          | Default Value      |
 |------------------------|--------------------------------------|--------------------|
 | Generate               | Whether to generate the chart at all. If set to false, no further settings need to be specified.         | true               |
-| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days.      | 90                 |
+| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days. The value is in days or as a date in the format "YYYY-MM-dd" (2024-08-19).     | 90                 |
 | ChartName              | File name of the chart.          | StartedVsFinished.png|
 | StartedColor           | Color for started items on the chart  | orange             |
 | ClosedColor            | Color for closed items on the chart   | green              |
@@ -97,7 +97,7 @@ In the [ExampleConfig.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob
 | Name                   | Description                          | Default Value      |
 |------------------------|--------------------------------------|--------------------|
 | Generate               | Whether to generate the chart at all. If set to false, no further settings need to be specified. If enabled, `estimationColumn` must be set and available in the CSV.         | false               |
-| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days.      | 90                 |
+| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days. The value is in days or as a date in the format "YYYY-MM-dd" (2024-08-19).     | 90                 |
 | ChartName              | File name of the chart.          | EstimationVsCycleTime.png|
 | estimationUnit         | Unit of estimation that will be visible on the chart. Examples: Story Points, Hours, Ideal Days etc.          | Story Points |
 
@@ -108,7 +108,7 @@ In the [ExampleConfig.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob
 | Generate               | Whether to generate the chart at all. If set to false, no further settings need to be specified. If enabled, process behaviour charts for all 4 measures of flow will be generated.         | true               |
 | BaselineStart          | The start date for your baseline for the PBCs. Follows the format "yyyy-MM-dd". The baseline is what defines the visualized average, as well as the upper and lower natural process limit.        | 2024-01-01               |
 | BaselineEnd            | The end date for your baseline for the PBCs. Follows the format "yyyy-MM-dd". The baseline is what defines the visualized average, as well as the upper and lower natural process limit.      | 2024-01-31               |
-| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days.      | 60                 |
+| History                | Defines how much data should be used. It's always calculated from today backwards. The value is in days. The value is in days or as a date in the format "YYYY-MM-dd" (2024-08-19).     | 60                 |
 | ThroughputChartName    | File name of the Throughput PBC chart.          | Throughput_PBC.png|
 | CycleTimeChartName     | File name of the Cycle Time PBC chart.          | CycleTime_PBC.png|
 | WipChartName           | File name of the WIP PBC chart.          | WorkInProgress_PBC.png|
