@@ -67,6 +67,7 @@ class FlowMetricsService:
         plt.ylabel("Cycle Time (days)")
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
         plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+        plt.gca().set_ylim(bottom=0)  
 
         self.add_timestamp(plt)
 
@@ -132,6 +133,7 @@ class FlowMetricsService:
         plt.xlabel("Work Item Started Date")
         plt.ylabel("Time (days)")
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
+        plt.gca().set_ylim(bottom=0)  
 
         self.add_timestamp(plt)
 
@@ -206,6 +208,7 @@ class FlowMetricsService:
         plt.ylabel("Number of Items Completed")
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
         plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+        plt.gca().set_ylim(bottom=0)  
         plt.legend(loc='upper left')
 
         self.add_timestamp(plt)
@@ -227,20 +230,27 @@ class FlowMetricsService:
 
         if history is not None:
             # Filter items based on the history parameter
-            end_date = datetime.today()
-            start_date = end_date - timedelta(days=history)
-            items = [item for item in items if item.started_date is not None and start_date <= item.started_date <= end_date]
+            chart_end_date = datetime.today()
+            chart_start_date = chart_end_date - timedelta(days=history)
+            
+            relevant_items = []
+            for item in items:
+                if item.closed_date is not None and item.closed_date <= chart_start_date:
+                    continue
+                
+                if item.started_date is not None and item.started_date <= chart_end_date:
+                    relevant_items.append(item)
 
         # Set default size to be wider (10 inches width and 6 inches height in this example)
         plt.figure(figsize=(15, 9))
 
         # Create a range of dates representing the specified history
-        history_dates = pd.date_range(end_date - timedelta(days=history-1), end_date)
+        history_dates = pd.date_range(chart_end_date - timedelta(days=history-1), chart_end_date)
 
         # Count the number of items in process for each day
         wip_counts = Counter()
 
-        for item in items:
+        for item in relevant_items:
             wip_counts[item.started_date.date()] += 1
             if item.closed_date:
                 wip_counts[item.closed_date.date()] -= 1
@@ -256,8 +266,8 @@ class FlowMetricsService:
         plt.ylabel("Number of Items In Process")
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
         plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+        plt.gca().set_ylim(bottom=0)  
         plt.legend(loc='upper left')
-
         self.add_timestamp(plt)
         self.add_logo(plt)
 
@@ -312,6 +322,7 @@ class FlowMetricsService:
         plt.title("Work Started and Closed")
         plt.xlabel("Week of the Year")
         plt.ylabel("Number of Work Items")
+        plt.gca().set_ylim(bottom=0)  
 
         self.add_timestamp(plt)
 
@@ -368,6 +379,7 @@ class FlowMetricsService:
         plt.xlabel("Estimation ({0})".format(estimation_unit))
         plt.ylabel("Cycle Time (days)")
         plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+        plt.gca().set_ylim(bottom=0)  
 
         self.add_timestamp(plt)
         self.add_logo(plt)
