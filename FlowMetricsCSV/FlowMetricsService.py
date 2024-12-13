@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from matplotlib.dates import DateFormatter
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 import matplotlib.image as mpimg
@@ -16,9 +17,10 @@ import os
 
 class FlowMetricsService:    
 
-    def __init__(self, show_plots, charts_folder):
+    def __init__(self, show_plots, charts_folder, today = datetime.today()):
         self.show_plots = show_plots
         self.charts_folder = charts_folder
+        self.today = today
 
         self.current_date = datetime.now().strftime('%d.%m.%Y')
 
@@ -41,7 +43,7 @@ class FlowMetricsService:
 
         if history is not None:
             # Filter items based on the history parameter
-            end_date = datetime.today()
+            end_date = self.today
             start_date = end_date - timedelta(days=history)
             items = [item for item in items if item.closed_date and item.started_date and start_date <= item.closed_date <= end_date]
             cycle_times = [item.cycle_time for item in items if item.cycle_time is not None]
@@ -139,7 +141,7 @@ class FlowMetricsService:
 
         if history is not None:
             # Filter items based on the history parameter for calculating Cycle Time percentiles
-            end_date = datetime.today()
+            end_date = self.today
             start_date = end_date - timedelta(days=history)
             items = [item for item in items if item.closed_date and start_date <= item.closed_date <= end_date]
 
@@ -171,7 +173,7 @@ class FlowMetricsService:
             raise ValueError(f"The 'x_axis_unit' parameter should be one of {valid_units}.")
         
         # Filter items based on the history parameter
-        start_date = datetime.today() - timedelta(days=history)
+        start_date = self.today - timedelta(days=history)
         closed_dates = [item.closed_date.date() for item in items if item.closed_date and start_date <= item.closed_date]
 
         if not closed_dates:
@@ -230,7 +232,7 @@ class FlowMetricsService:
 
         if history is not None:
             # Filter items based on the history parameter
-            chart_end_date = datetime.today()
+            chart_end_date = self.today
             chart_start_date = chart_end_date - timedelta(days=history)
             
             relevant_items = []
@@ -267,6 +269,10 @@ class FlowMetricsService:
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
         plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
         plt.gca().set_ylim(bottom=0)  
+        
+        date_format = DateFormatter("%Y-%m-%d")
+        plt.gca().xaxis.set_major_formatter(date_format)
+        
         plt.legend(loc='upper left')
         self.add_timestamp(plt)
         self.add_logo(plt)
@@ -281,7 +287,7 @@ class FlowMetricsService:
     def plot_work_started_vs_finished_chart(self, work_items, history, started_color, closed_color, chart_name):
         print("Creating Work Started vs. finished chart with following config: History: {0}, Chart Name: {1}, Started Color: {2}, Closed Color: {3}".format(history, chart_name, started_color, closed_color))
 
-        start_date = datetime.today() - timedelta(days=history)
+        start_date = self.today - timedelta(days=history)
         filtered_items = [item for item in work_items if item.started_date and start_date <= item.started_date]
 
         # Calculate counts based on weeks
@@ -353,7 +359,7 @@ class FlowMetricsService:
 
         if history is not None:
             # Filter items based on the history parameter
-            end_date = datetime.today()
+            end_date = self.today
             start_date = end_date - timedelta(days=history)
             items = [item for item in filtered_items if item.closed_date and item.started_date and start_date <= item.closed_date <= end_date]
             cycle_times = [item.cycle_time for item in items]
@@ -397,10 +403,10 @@ class FlowMetricsService:
         baseline_values = list(baseline_total_age.values())
         (baseline_average, unpl, lnpl) = self.caclulate_average_and_limits(baseline_values)
         
-        start_date = datetime.today() - timedelta(days=history)
-        total_age_data = self.get_total_age_history_for_date_range(start_date, datetime.today(), work_items)
+        start_date = self.today - timedelta(days=history)
+        total_age_data = self.get_total_age_history_for_date_range(start_date, self.today, work_items)
         
-        x_values = [datetime.today() - timedelta(days=days) for days in total_age_data.keys()]
+        x_values = [self.today - timedelta(days=days) for days in total_age_data.keys()]
         y_values = list(total_age_data.values())
         
         self.plot_pbc(x_values, y_values, baseline_average, unpl, lnpl, "Total Work Item Age X Chart", "Date", "Total Age", chart_name)     
@@ -411,8 +417,8 @@ class FlowMetricsService:
         baseline_values = [item.cycle_time for item in baseline_cycle_time.values()]
         (baseline_average, unpl, lnpl) = self.caclulate_average_and_limits(baseline_values)
         
-        start_date = datetime.today() - timedelta(days=history)
-        cycle_time_data = self.get_cycle_time_history_for_date_range(start_date, datetime.today(), work_items)
+        start_date = self.today - timedelta(days=history)
+        cycle_time_data = self.get_cycle_time_history_for_date_range(start_date, self.today, work_items)
         
         x_values = list(cycle_time_data.keys())
         y_values = [item.cycle_time for item in cycle_time_data.values()]
@@ -427,10 +433,10 @@ class FlowMetricsService:
         baseline_values = list(baseline_wip.values())
         (baseline_average, unpl, lnpl) = self.caclulate_average_and_limits(baseline_values)
         
-        start_date = datetime.today() - timedelta(days=history)
-        wip_data = self.get_wip_history_for_date_range(start_date, datetime.today(), work_items)
+        start_date = self.today - timedelta(days=history)
+        wip_data = self.get_wip_history_for_date_range(start_date, self.today, work_items)
         
-        x_values = [datetime.today() - timedelta(days=days) for days in wip_data.keys()]        
+        x_values = [self.today - timedelta(days=days) for days in wip_data.keys()]        
         y_values = list(wip_data.values())
         
         self.plot_pbc(x_values, y_values, baseline_average, unpl, lnpl, "WIP X Chart", "Date", "WIP", chart_name)
@@ -441,10 +447,10 @@ class FlowMetricsService:
         baseline_values = list(baseline_closed_items.values())
         (baseline_average, unpl, lnpl) = self.caclulate_average_and_limits(baseline_values)
         
-        start_date = datetime.today() - timedelta(days=history)
-        throughput_data = self.get_throughput_history_for_date_range(start_date, datetime.today(), work_items)
+        start_date = self.today - timedelta(days=history)
+        throughput_data = self.get_throughput_history_for_date_range(start_date, self.today, work_items)
         
-        x_values = [datetime.today() - timedelta(days=days) for days in throughput_data.keys()]        
+        x_values = [self.today - timedelta(days=days) for days in throughput_data.keys()]        
         y_values = list(throughput_data.values())
         
         self.plot_pbc(x_values, y_values, baseline_average, unpl, lnpl, "Throughput X Chart", "Date", "Throughput", chart_name)

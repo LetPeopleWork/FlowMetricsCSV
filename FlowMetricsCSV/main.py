@@ -115,17 +115,27 @@ def main():
             show_plots = config["general"]["showPlots"]
             charts_folder = config["general"]["chartsFolder"]
             
+            today = datetime.today()
+            
+            try:
+                today_argument = config["general"]["today"]
+                
+                if today_argument:
+                    today = datetime.strptime(today_argument, "%Y-%m-%d")
+            except:
+                print("No overwrite for today")
+            
             if not closed_date_format:
                 closed_date_format = start_date_format
             
             csv_service = CsvService()
-            flow_metrics_service = FlowMetricsService(show_plots, charts_folder)
+            flow_metrics_service = FlowMetricsService(show_plots, charts_folder, today)
             
             print("Using following CSV file: {0}".format(file_name))
             file_exists = check_if_file_exists(file_name, not using_example_config)                
             
             if using_example_config and not file_exists:
-                csv_service.write_example_file(file_name, delimiter, started_date_column, closed_date_column, start_date_format, closed_date_format, estimation_column, item_title_column)
+                csv_service.write_example_file(file_name, delimiter, started_date_column, closed_date_column, start_date_format, closed_date_format, estimation_column, item_title_column, today)
 
             def get_items():    
                 work_items = csv_service.parse_items(file_name, delimiter, started_date_column, closed_date_column, start_date_format, closed_date_format, estimation_column, item_title_column)

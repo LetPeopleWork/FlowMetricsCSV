@@ -42,6 +42,7 @@ In the [ExampleConfig.json](https://github.com/LetPeopleWork/FlowMetricsCSV/blob
 | itemTitleColumn       | The name of the column in the csv file that contains the title of the items (optional). This can be anything to identify the item, like an ID or some other text. If set, it will display the text next to the bubbles in the charts. Note that the shorter the text, the easier it is to read. Long texts will overlap.          | ID        |
 | ChartsFolder           | Folder path for the folder where the charts should be saved. Can be relative to the script location (like the default) or a full path to a folder. Folder does not need to exist, it will be created as part of the script.               | Charts             |
 | ShowPlots              | If set to true, the script will stop and show you an interactive version of the chart before continuing.                | false              |
+| Today              | Specify to set a different "end date" for your charts than today. Specify dates in the format "YYYY-MM-dd", for example 2024-08-19 for the 19th of August 2024. This setting helps you generate charts for past date intervals, for example if you want to recreate charts for a given month in the past. The history parameter of the different charts uses the "Today" date as reference, and will "go back" from this one.                | null              |
 
 ### Cycle Time Scatter Plot
 

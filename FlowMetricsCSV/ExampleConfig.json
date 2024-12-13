@@ -9,7 +9,8 @@
         "estimationColumn": "Story Points",
         "itemTitleColumn": "ID",
         "chartsFolder": "Charts",
-        "showPlots": false
+        "showPlots": false,
+        "today": null
     },
     "cycleTimeScatterPlot": {
         "generate": true,

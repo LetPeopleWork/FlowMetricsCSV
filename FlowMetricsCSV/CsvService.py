@@ -41,7 +41,7 @@ class CsvService:
 
         return work_items
 
-    def write_example_file(self, file_path, delimiter, started_date_column_name, closed_date_column_name, start_date_format, closed_date_format, estimation_column_name, item_title_column):
+    def write_example_file(self, file_path, delimiter, started_date_column_name, closed_date_column_name, start_date_format, closed_date_format, estimation_column_name, item_title_column, today = datetime.today()):
         print("Writing Example File with random values to {0}".format(file_path))
         
         with open(file_path, 'w', newline='') as file:
@@ -61,8 +61,8 @@ class CsvService:
                 
                 end_date_delta = random.randint(0, 30)
                 
-                random_start_date = datetime.now() - timedelta(days=start_date_delta)
-                random_end_date = datetime.now() - timedelta(days=end_date_delta)
+                random_start_date = today - timedelta(days=start_date_delta)
+                random_end_date = today - timedelta(days=end_date_delta)
                 
                 started_date = random_start_date.strftime(start_date_format)
                 end_date = ""
