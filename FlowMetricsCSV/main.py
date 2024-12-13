@@ -2,9 +2,14 @@ import argparse
 import os
 import shutil
 from datetime import datetime
+
+import requests
+from importlib.metadata import version
+
+import json
+
 from .CsvService import CsvService
 from .FlowMetricsService import FlowMetricsService
-import json
 
 def print_logo():
     logo = r"""
@@ -21,6 +26,25 @@ def print_logo():
                                                         |__/                                                                
     """
     print(logo)
+
+def check_for_updates(package_name):
+    try:
+        current_version = version(package_name)
+
+        # Query PyPI for the latest version
+        response = requests.get(f"https://pypi.org/pypi/{package_name}/json")
+        response.raise_for_status()
+        latest_version = response.json()["info"]["version"]
+
+        # Compare versions
+        if current_version != latest_version:
+            print("------- Update Available -----------")
+            print(f"Update available: {latest_version} (current: {current_version})")
+            print(f"Run the following command to upgrade: 'python -m pip install --upgrade {package_name}'")
+            print("------- Update Available -----------")
+
+    except Exception:
+        print("Error checking for updates - ignoring")
 
 def copy_default_config(script_dir):        
     default_config_file = os.path.join(script_dir, "ExampleConfig.json")
@@ -50,6 +74,13 @@ def read_config(file_path):
 def main():
     try:
         print_logo()
+        
+        package_name = "flowmetricscsv"
+        current_version = version(package_name)
+        
+        print("================================================================")
+        print("{0}@v{1}".format(package_name, current_version))
+        print("================================================================")  
         
         script_dir = os.path.dirname(os.path.abspath(__file__))
         
@@ -176,7 +207,7 @@ def main():
             create_process_behaviour_charts()       
 
             print()
-            print()
+            check_for_updates(package_name)
             print()
             print("🛈 Want to learn more about how all of this works? Check out out website! 🛈")
             print("🔗 https://letpeople.work 🔗")
