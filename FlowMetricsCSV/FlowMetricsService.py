@@ -106,8 +106,9 @@ class FlowMetricsService:
 
     def plot_work_item_age_scatterplot(self, items, history, x_axis_lines, x_axis_line_colors, chart_name):
         print("Creating Work Item Scatterplot with following config: History: {0}, Chart Name: {1}, X-Axis Lines: {2}, X-Axis Line Colors: {3}".format(history, chart_name, x_axis_lines, x_axis_line_colors))
-        work_item_ages = [item.work_item_age for item in items if item.work_item_age is not None]
-
+        filtered_items = [item for item in items if item.work_item_age is not None and self.is_date_between_today_and_history(item.started_date, history)]
+        
+        work_item_ages = [item.work_item_age for item in filtered_items]
         if not work_item_ages:
             print("No work items with age for plotting.")
             return
@@ -115,13 +116,13 @@ class FlowMetricsService:
         # Set default size to be wider (10 inches width and 6 inches height in this example)
         plt.figure(figsize=(15, 9))
 
-        dates = [item.started_date.date() for item in items if item.work_item_age is not None]
+        dates = [item.started_date.date() for item in filtered_items]
 
         # Plot Work Item Age as triangles
         plt.scatter(dates, work_item_ages, label='Work Item Age (days)', alpha=0.7)
         
         texts = []
-        for item in items:
+        for item in filtered_items:
             work_item_age = item.work_item_age
             
             if work_item_age:
@@ -143,9 +144,9 @@ class FlowMetricsService:
             # Filter items based on the history parameter for calculating Cycle Time percentiles
             end_date = self.today
             start_date = end_date - timedelta(days=history)
-            items = [item for item in items if item.closed_date and start_date <= item.closed_date <= end_date]
+            filtered_items = [item for item in filtered_items if item.closed_date and start_date <= item.closed_date <= end_date]
 
-        if len(items) > 0:            
+        if len(filtered_items) > 0:            
             for value, color in zip(x_axis_lines, x_axis_line_colors):
                 plt.axhline(y=value, color=color, linestyle='--', label=f'{value} Days')
         else:
@@ -173,8 +174,7 @@ class FlowMetricsService:
             raise ValueError(f"The 'x_axis_unit' parameter should be one of {valid_units}.")
         
         # Filter items based on the history parameter
-        start_date = self.today - timedelta(days=history)
-        closed_dates = [item.closed_date.date() for item in items if item.closed_date and start_date <= item.closed_date]
+        closed_dates = [item.closed_date.date() for item in items if self.is_date_between_today_and_history(item.closed_date, history)]
 
         if not closed_dates:
             print("No closed work items for plotting throughput.")
@@ -284,27 +284,30 @@ class FlowMetricsService:
         if self.show_plots:
             plt.show()
 
+    def is_date_between_today_and_history(self, date, history):
+        if date is None:
+            return False
+        
+        return date >= self.today - timedelta(days=history) and date <= self.today
+
+
     def plot_work_started_vs_finished_chart(self, work_items, history, started_color, closed_color, chart_name):
         print("Creating Work Started vs. finished chart with following config: History: {0}, Chart Name: {1}, Started Color: {2}, Closed Color: {3}".format(history, chart_name, started_color, closed_color))
-
-        start_date = self.today - timedelta(days=history)
-        filtered_items = [item for item in work_items if item.started_date and start_date <= item.started_date]
 
         # Calculate counts based on weeks
         started_counts = {}
         closed_counts = {}
 
-        for item in filtered_items:
-            started_date_key = item.started_date.date().strftime('%Y-%W') if item.started_date else None
-            closed_date_key = item.closed_date.date().strftime('%Y-%W') if item.closed_date else None
-
-            if started_date_key:
+        for item in work_items:
+            if self.is_date_between_today_and_history(item.started_date, history):
+                started_date_key = item.started_date.date().strftime('%Y-%W')
                 started_counts[started_date_key] = started_counts.get(started_date_key, 0) + 1
                 
                 # Make sure we have the same keys in both dictionaries - keep the existing value
                 closed_counts[started_date_key] = closed_counts.get(started_date_key, 0) + 0
 
-            if closed_date_key:
+            if self.is_date_between_today_and_history(item.closed_date, history):
+                closed_date_key = item.closed_date.date().strftime('%Y-%W')
                 closed_counts[closed_date_key] = closed_counts.get(closed_date_key, 0) + 1
 
                 # Make sure we have the same keys in both dictionaries - keep the existing value
