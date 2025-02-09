@@ -3,9 +3,6 @@ import os
 import shutil
 from datetime import datetime
 
-import requests
-from importlib.metadata import version
-
 import json
 
 from .CsvService import CsvService
@@ -26,25 +23,6 @@ def print_logo():
                                                         |__/                                                                
     """
     print(logo)
-
-def check_for_updates(package_name):
-    try:
-        current_version = version(package_name)
-
-        # Query PyPI for the latest version
-        response = requests.get(f"https://pypi.org/pypi/{package_name}/json")
-        response.raise_for_status()
-        latest_version = response.json()["info"]["version"]
-
-        # Compare versions
-        if current_version != latest_version:
-            print("------- Update Available -----------")
-            print(f"Update available: {latest_version} (current: {current_version})")
-            print(f"Run the following command to upgrade: 'python -m pip install --upgrade {package_name}'")
-            print("------- Update Available -----------")
-
-    except Exception:
-        print("Error checking for updates - ignoring")
 
 def copy_default_config(script_dir):        
     default_config_file = os.path.join(script_dir, "ExampleConfig.json")
@@ -217,10 +195,13 @@ def main():
             create_process_behaviour_charts()       
 
             print()
-            check_for_updates(package_name)
-            print()
-            print("🛈 Want to learn more about how all of this works? Check out out website! 🛈")
-            print("🔗 https://letpeople.work 🔗")
+            
+            print("================================================================")
+            print("MonteCarloCSV is deprecated and will not receive any further updates.")
+            print("Please consider using FlowPulse which supports CSV files as well as Jira and Azure DevOps.")
+            print("You can find more details at https://letpeople.work#flowpulse")
+            print("================================================================")
+            
     except Exception as exception:
         print("Error while executing flowmetricscsv:")
         print(exception)

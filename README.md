@@ -2,6 +2,9 @@
 ![CI Workflow](https://github.com/letpeoplework/flowmetricscsv/actions/workflows/publish.yml/badge.svg)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/flowmetricscsv)
 
+# ⚠️ DEPRECATED - This project is no longer maintained
+**MonteCarloCSV is no longer updated. Please switch to [FlowPulse](https://github.com/letpeoplework/flowpulse) instead, which supports the same functionality.**
+
 This python package allows you to visualize the four measures of flow based on any csv file. It can be run offline, and all it needs is a csv file with the start and closing dates of the items. Items that are still in progress, have no value for the closed date. Feel free to check out the code, propose improvements and also make it your own by adjusting it to your context and potentially integrating it into some kind of pipeline of yours. The true power of Flow Metrics comes when inspected on a regular base. The point of collecting data is to take action, so use this to make informed decisions about what you want to adjust! You can use this for free, hope it helps.
 
 This tool is provided for free by [LetPeopleWork](https://letpeople.work). If you are curious about Flow Metrics, Kanban, #NoEstimates etc., feel free to reach out to us and [book a call](https://calendly.com/letpeoplework/)!
